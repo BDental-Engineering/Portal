@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Portal Debug</title>
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;--accent:#4f6ef7;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--text:#e2e8f0;--muted:#8892b0;--radius:14px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;padding:2rem}
+  h1{font-size:1.4rem;font-weight:700;margin-bottom:.25rem}
+  .sub{color:var(--muted);font-size:.875rem;margin-bottom:2rem}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1rem;margin-bottom:2rem}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+  .card-header{padding:.9rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .card-title{font-weight:700;font-size:.9rem}
+  .card-body{padding:1.25rem;font-size:.8rem}
+  .status{display:inline-flex;align-items:center;gap:.4rem;border-radius:20px;padding:.25rem .75rem;font-size:.75rem;font-weight:700}
+  .status.pending{background:rgba(136,146,176,.12);color:var(--muted)}
+  .status.ok{background:rgba(34,197,94,.15);color:var(--green)}
+  .status.warn{background:rgba(245,158,11,.15);color:var(--amber)}
+  .status.fail{background:rgba(239,68,68,.15);color:var(--red)}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+  pre{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.9rem;overflow-x:auto;white-space:pre-wrap;word-break:break-all;color:var(--muted);font-size:.75rem;margin-top:.75rem;max-height:200px;overflow-y:auto}
+  .label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:.35rem}
+  .val{font-size:.85rem;color:var(--text);margin-bottom:.75rem;word-break:break-all}
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.25rem;font-size:.85rem;font-weight:600;cursor:pointer;margin-right:.5rem;margin-bottom:.5rem}
+  .btn:hover{opacity:.88}
+  .btn.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+  .btn.danger{background:var(--red)}
+  .divider{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+  .section-title{font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--text)}
+  .env-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border)}
+  .env-row:last-child{border-bottom:none}
+  .env-key{font-size:.8rem;font-family:monospace;color:var(--text)}
+  .env-note{font-size:.75rem;color:var(--muted)}
+  .spinner{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:currentColor;border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:.5rem}
+  .toast{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.75rem 1.25rem;font-size:.875rem;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:slideIn .3s ease;min-width:220px}
+  .toast.ok{border-left:3px solid var(--green)}
+  .toast.fail{border-left:3px solid var(--red)}
+  @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
+  table{width:100%;border-collapse:collapse;font-size:.8rem}
+  th{text-align:left;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:.5rem .75rem;border-bottom:1px solid var(--border)}
+  td{padding:.5rem .75rem;border-bottom:1px solid var(--border)}
+  tr:last-child td{border-bottom:none}
+  .pill{display:inline-block;border-radius:20px;padding:.15rem .55rem;font-size:.7rem;font-weight:700}
+  .pill-green{background:rgba(34,197,94,.15);color:var(--green)}
+  .pill-red{background:rgba(239,68,68,.15);color:var(--red)}
+  .pill-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+  .pill-blue{background:rgba(79,110,247,.15);color:var(--accent)}
+</style>
+</head>
+<body>
+
+<h1>🔧 Portal Debug Console</h1>
+<p class="sub">Diagnose environment variables, API endpoints, GitHub connectivity and session state.</p>
+
+<div style="margin-bottom:1.5rem">
+  <button class="btn" onclick="runAll()">▶ Run All Checks</button>
+  <button class="btn secondary" onclick="clearAll()">✕ Clear</button>
+</div>
+
+<!-- SUMMARY GRID -->
+<div class="grid" id="checkGrid">
+
+  <!-- Session -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">🔐 Session / Auth</span>
+      <span class="status pending" id="s-session"><span class="dot"></span> Pending</span>
+    </div>
+    <div class="card-body">
+      <div class="label">Endpoint</div>
+      <div class="val">/api/portal-auth?action=session</div>
+      <div class="label">Result</div>
+      <pre id="r-session">Not run yet</pre>
+    </div>
+  </div>
+
+  <!-- Customers API -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">👥 Customers API</span>
+      <span class="status pending" id="s-customers"><span class="dot"></span> Pending</span>
+    </div>
+    <div class="card-body">
+      <div class="label">Endpoint</div>
+      <div class="val">/api/portal-customers</div>
+      <div class="label">Result</div>
+      <pre id="r-customers">Not run yet</pre>
+    </div>
+  </div>
+
+  <!-- Assets API -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">🖥 Assets API</span>
+      <span class="status pending" id="s-assets"><span class="dot"></span> Pending</span>
+    </div>
+    <div class="card-body">
+      <div class="label">Endpoint</div>
+      <div class="val">/api/portal-assets</div>
+      <div class="label">Result</div>
+      <pre id="r-assets">Not run yet</pre>
+    </div>
+  </div>
+
+  <!-- Documents API -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📄 Documents API</span>
+      <span class="status pending" id="s-documents"><span class="dot"></span> Pending</span>
+    </div>
+    <div class="card-body">
+      <div class="label">Endpoint</div>
+      <div class="val">/api/portal-documents</div>
+      <div class="label">Result</div>
+      <pre id="r-documents">Not run yet</pre>
+    </div>
+  </div>
+
+  <!-- Manuals API -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">📘 Manuals API</span>
+      <span class="status pending" id="s-manuals"><span class="dot"></span> Pending</span>
+    </div>
+    <div class="card-body">
+      <div class="label">Endpoint</div>
+      <div class="val">/api/portal-manuals</div>
+      <div class="label">Result</div>
+      <pre id="r-manuals">Not run yet</pre>
+    </div>
+  </div>
+
+  <!-- Users API -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">👤 Users API</span>
+      <span class="status pending" id="s-users"><span class="dot"></span> Pending</span>
+    </div>
+    <div class="card-body">
+      <div class="label">Endpoint</div>
+      <div class="val">/api/portal-users</div>
+      <div class="label">Result</div>
+      <pre id="r-users">Not run yet</pre>
+    </div>
+  </div>
+
+</div>
+
+<hr class="divider"/>
+
+<!-- ENV CHECK -->
+<div class="section-title">⚙️ Environment Variables</div>
+<div class="card" style="margin-bottom:2rem">
+  <div class="card-body" style="padding:0">
+    <div style="padding:.75rem 1.25rem">
+      <button class="btn" onclick="checkEnv()">Check Env Vars</button>
+      <span style="color:var(--muted);font-size:.8rem">Calls a lightweight probe endpoint</span>
+    </div>
+    <div id="envResult" style="padding:0 1.25rem 1.25rem;display:none">
+      <table id="envTable">
+        <thead><tr><th>Variable</th><th>Status</th><th>Note</th></tr></thead>
+        <tbody id="envBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- GITHUB FILE CHECK -->
+<div class="section-title">📁 GitHub Data Files</div>
+<div class="card" style="margin-bottom:2rem">
+  <div class="card-body">
+    <button class="btn" onclick="checkFiles()">Check Data Files</button>
+    <div id="fileResult" style="margin-top:1rem;display:none">
+      <table id="fileTable">
+        <thead><tr><th>File</th><th>Status</th><th>Records</th><th>Note</th></tr></thead>
+        <tbody id="fileBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- MANUAL LOGIN TEST -->
+<div class="section-title">🧪 Manual Login Test</div>
+<div class="card" style="margin-bottom:2rem">
+  <div class="card-body">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div>
+        <div class="label">Email</div>
+        <input type="email" id="testEmail" placeholder="admin@yourdomain.com" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;color:var(--text);font-size:.85rem;outline:none"/>
+      </div>
+      <div>
+        <div class="label">Password</div>
+        <input type="password" id="testPassword" placeholder="your password" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;color:var(--text);font-size:.85rem;outline:none"/>
+      </div>
+    </div>
+    <button class="btn" onclick="testLogin()">Test Login</button>
+    <button class="btn danger" onclick="testLogout()">Test Logout</button>
+    <pre id="loginResult" style="margin-top:1rem">Not run yet</pre>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- SHA256 GENERATOR -->
+<div class="section-title">🔑 SHA-256 Password Hasher</div>
+<div class="card" style="margin-bottom:2rem">
+  <div class="card-body">
+    <div class="label">Plain text password</div>
+    <div style="display:flex;gap:.75rem;margin-bottom:.75rem">
+      <input type="text" id="hashInput" placeholder="Type password to hash…" style="flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;color:var(--text);font-size:.85rem;outline:none"/>
+      <button class="btn" onclick="hashPassword()">Hash It</button>
+    </div>
+    <div class="label">SHA-256 Hash (copy into portal_users.json)</div>
+    <pre id="hashResult" style="cursor:pointer" onclick="copyHash()" title="Click to copy">—</pre>
+    <div style="color:var(--muted);font-size:.75rem;margin-top:.5rem">Click the hash to copy it to clipboard</div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- SEED ADMIN -->
+<div class="section-title">🌱 Seed First Admin User</div>
+<div class="card" style="margin-bottom:2rem">
+  <div class="card-body">
+    <p style="color:var(--muted);font-size:.8rem;margin-bottom:1rem">Fill in details and click Generate to get the JSON to paste into your GitHub repo at <code style="color:var(--accent)">data/portal_users.json</code></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+      <div>
+        <div class="label">Name</div>
+        <input type="text" id="seedName" placeholder="Admin" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;color:var(--text);font-size:.85rem;outline:none"/>
+      </div>
+      <div>
+        <div class="label">Email</div>
+        <input type="email" id="seedEmail" placeholder="admin@yourdomain.com" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;color:var(--text);font-size:.85rem;outline:none"/>
+      </div>
+    </div>
+    <div style="margin-bottom:1rem">
+      <div class="label">Password</div>
+      <input type="text" id="seedPassword" placeholder="Choose a strong password" style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;color:var(--text);font-size:.85rem;outline:none"/>
+    </div>
+    <button class="btn" onclick="generateSeed()">Generate JSON</button>
+    <pre id="seedResult" style="margin-top:1rem;cursor:pointer" onclick="copySeed()" title="Click to copy">Fill in the fields above and click Generate</pre>
+    <div style="color:var(--muted);font-size:.75rem;margin-top:.5rem">Click the JSON to copy it · Paste into <code style="color:var(--accent)">data/portal_users.json</code> in your GitHub repo</div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ── SHA-256 (native WebCrypto) ──────────────────────────
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+// ── API CHECK ──────────────────────────────────────────
+async function checkEndpoint(key, url, expectAuth) {
+  setStatus(key, 'pending', '⏳ Checking…');
+  try {
+    const r = await fetch(url, { credentials: 'include' });
+    const text = await r.text();
+    let parsed;
+    try { parsed = JSON.parse(text); } catch { parsed = text; }
+    const pretty = typeof parsed === 'string' ? parsed : JSON.stringify(parsed, null, 2);
+    document.getElementById('r-' + key).textContent = `HTTP \${r.status}\n\n${pretty}`;
+
+    if (r.status === 401 && expectAuth) {
+      setStatus(key, 'warn', '⚠️ Not logged in');
+    } else if (r.ok || (r.status === 401 && !expectAuth)) {
+      setStatus(key, 'ok', '✅ Reachable');
+    } else {
+      setStatus(key, 'fail', `❌ HTTP \${r.status}`);
+    }
+  } catch (e) {
+    document.getElementById('r-' + key).textContent = 'Network error: ' + e.message;
+    setStatus(key, 'fail', '❌ Network Error');
+  }
+}
+
+function setStatus(key, type, label) {
+  const el = document.getElementById('s-' + key);
+  el.className = 'status ' + type;
+  el.innerHTML = `<span class="dot"></span> \${label}`;
+}
+
+async function runAll() {
+  await Promise.all([
+    checkEndpoint('session',   '/api/portal-auth?action=session', false),
+    checkEndpoint('customers', '/api/portal-customers',           true),
+    checkEndpoint('assets',    '/api/portal-assets',              true),
+    checkEndpoint('documents', '/api/portal-documents',           true),
+    checkEndpoint('manuals',   '/api/portal-manuals',             true),
+    checkEndpoint('users',     '/api/portal-users',               true),
+  ]);
+}
+
+function clearAll() {
+  ['session','customers','assets','documents','manuals','users'].forEach(k => {
+    setStatus(k, 'pending', 'Pending');
+    document.getElementById('r-' + k).textContent = 'Not run yet';
+  });
+  document.getElementById('loginResult').textContent = 'Not run yet';
+  document.getElementById('envResult').style.display = 'none';
+  document.getElementById('fileResult').style.display = 'none';
+}
+
+// ── ENV CHECK (via portal-auth probe) ──────────────────
+async function checkEnv() {
+  const r = await fetch('/api/portal-debug-env', { credentials: 'include' });
+  // Fallback: infer from auth response
+  const authR = await fetch('/api/portal-auth?action=session', { credentials: 'include' });
+  const authText = await authR.text();
+
+  const vars = [
+    { key: 'GITHUB_TOKEN',  hint: 'ghp_… token from github.com/settings/tokens' },
+    { key: 'GITHUB_OWNER',  hint: 'Your GitHub username' },
+    { key: 'GITHUB_REPO',   hint: 'Your repository name' },
+    { key: 'GITHUB_BRANCH', hint: 'Usually "main"' },
+  ];
+
+  // We can't read env vars client-side — show guidance based on API response
+  const isJsonError = authText.includes('JSON') || authText.includes('Unexpected');
+  const isNotFound  = authText.includes('NOT_FOUND') || authR.status === 404;
+  const isAuthError = authText.includes('Not authenticated');
+
+  document.getElementById('envResult').style.display = 'block';
+  document.getElementById('envBody').innerHTML = vars.map(v => {
+    let status, note;
+    if (v.key === 'GITHUB_TOKEN') {
+      status = isJsonError ? 'fail' : isAuthError ? 'ok' : 'warn';
+      note   = isJsonError ? 'Likely missing or invalid — GitHub returning non-JSON' : isAuthError ? 'API reachable (token likely set)' : 'Unknown';
+    } else if (v.key === 'GITHUB_BRANCH') {
+      status = 'warn';
+      note   = 'Defaults to "main" if not set';
+    } else {
+      status = isJsonError ? 'fail' : 'warn';
+      note   = isJsonError ? 'Check Vercel → Settings → Environment Variables' : 'Cannot verify client-side';
+    }
+    const pillClass = status === 'ok' ? 'pill-green' : status === 'fail' ? 'pill-red' : 'pill-amber';
+    const pillLabel = status === 'ok' ? '✅ Likely Set' : status === 'fail' ? '❌ Check This' : '⚠️ Unverifiable';
+    return `<tr>
+      <td><code style="color:var(--accent)">${v.key}</code></td>
+      <td><span class="pill \${pillClass}">${pillLabel}</span></td>
+      <td style="color:var(--muted)">${v.hint}</td>
+    </tr>`;
+  }).join('');
+
+  // Raw response
+  const extra = document.createElement('tr');
+  extra.innerHTML = `<td colspan="3"><div class="label" style="margin-top:.75rem">Raw /api/portal-auth response</div><pre>${authText}</pre></td>`;
+  document.getElementById('envBody').appendChild(extra);
+}
+
+// ── FILE CHECK ─────────────────────────────────────────
+async function checkFiles() {
+  const files = [
+    'portal_users',
+    'portal_customers',
+    'portal_assets',
+    'portal_documents',
+    'portal_manuals',
+    'portal_sessions',
+  ];
+
+  document.getElementById('fileResult').style.display = 'block';
+  document.getElementById('fileBody').innerHTML = files.map(f =>
+    `<tr id="frow-${f}">
+      <td><code style="color:var(--accent)">data/${f}.json</code></td>
+      <td><span class="pill pill-amber">⏳ Checking</span></td>
+      <td>—</td>
+      <td style="color:var(--muted)">—</td>
+    </tr>`
+  ).join('');
+
+  // We probe via the API endpoints
+  const probes = {
+    portal_users:     '/api/portal-users',
+    portal_customers: '/api/portal-customers',
+    portal_assets:    '/api/portal-assets',
+    portal_documents: '/api/portal-documents',
+    portal_manuals:   '/api/portal-manuals',
+    portal_sessions:  '/api/portal-auth?action=session',
+  };
+
+  await Promise.all(files.map(async f => {
+    const r  = await fetch(probes[f], { credentials: 'include' });
+    const tx = await r.text();
+    const row = document.getElementById('frow-' + f);
+    let pill, count, note;
+
+    if (r.status === 401 || r.status === 403) {
+      // API reached but not authed — file likely exists
+      pill  = '<span class="pill pill-green">✅ Exists</span>';
+      count = '—';
+      note  = 'API reachable (login required to count records)';
+    } else if (r.ok) {
+      try {
+        const data = JSON.parse(tx);
+        count = Array.isArray(data) ? data.length + ' records' : '—';
+        pill  = '<span class="pill pill-green">✅ Exists</span>';
+        note  = 'File found and readable';
+      } catch {
+        pill  = '<span class="pill pill-amber">⚠️ Bad JSON</span>';
+        count = '—';
+        note  = 'File exists but contains invalid JSON';
+      }
+    } else if (tx.includes('JSON') || tx.includes('Unexpected') || tx.includes('parse')) {
+      pill  = '<span class="pill pill-red">❌ Missing / Bad</span>';
+      count = '—';
+      note  = 'File missing from GitHub repo or contains invalid JSON';
+    } else {
+      pill  = '<span class="pill pill-red">❌ Error</span>';
+      count = '—';
+      note  = `HTTP \${r.status}`;
+    }
+
+    row.innerHTML = `
+      <td><code style="color:var(--accent)">data/${f}.json</code></td>
+      <td>${pill}</td>
+      <td style="color:var(--muted)">${count}</td>
+      <td style="color:var(--muted)">${note}</td>`;
+  }));
+}
+
+// ── LOGIN TEST ─────────────────────────────────────────
+async function testLogin() {
+  const email    = document.getElementById('testEmail').value.trim();
+  const password = document.getElementById('testPassword').value;
+  if (!email || !password) { toast('Enter email and password first', 'fail'); return; }
+
+  document.getElementById('loginResult').textContent = '⏳ Testing…';
+  try {
+    const r = await fetch('/api/portal-auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ action: 'login', email, password })
+    });
+    const d = await r.json().catch(() => ({}));
+    document.getElementById('loginResult').textContent =
+      `HTTP \${r.status}\n\n${JSON.stringify(d, null, 2)}`;
+    if (r.ok && d.success) {
+      toast('Login successful! Role: ' + d.role, 'ok');
+      checkEndpoint('session', '/api/portal-auth?action=session', false);
+    } else {
+      toast('Login failed: ' + (d.error || 'Unknown error'), 'fail');
+    }
+  } catch (e) {
+    document.getElementById('loginResult').textContent = 'Network error: ' + e.message;
+    toast('Network error', 'fail');
+  }
+}
+
+async function testLogout() {
+  const r = await fetch('/api/portal-auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+    body: JSON.stringify({ action: 'logout' })
+  });
+  const d = await r.json().catch(() => ({}));
+  document.getElementById('loginResult').textContent =
+    `Logout HTTP \${r.status}\n\n${JSON.stringify(d, null, 2)}`;
+  toast('Logged out', 'ok');
+  checkEndpoint('session', '/api/portal-auth?action=session', false);
+}
+
+// ── PASSWORD HASHER ────────────────────────────────────
+async function hashPassword() {
+  const val = document.getElementById('hashInput').value;
+  if (!val) { toast('Enter a password first', 'fail'); return; }
+  const h = await sha256(val);
+  document.getElementById('hashResult').textContent = h;
+  toast('Hash generated — click it to copy', 'ok');
+}
+
+async function copyHash() {
+  const h = document.getElementById('hashResult').textContent;
+  if (h === '—') return;
+  await navigator.clipboard.writeText(h);
+  toast('Hash copied to clipboard!', 'ok');
+}
+
+// ── SEED GENERATOR ─────────────────────────────────────
+async function generateSeed() {
+  const name     = document.getElementById('seedName').value.trim()     || 'Admin';
+  const email    = document.getElementById('seedEmail').value.trim();
+  const password = document.getElementById('seedPassword').value;
+  if (!email || !password) { toast('Email and password are required', 'fail'); return; }
+  if (password.length < 8) { toast('Password must be at least 8 characters', 'fail'); return; }
+
+  const hash = await sha256(password);
+  const seed = [{
+    id:           'admin-001',
+    name,
+    email,
+    passwordHash: hash,
+    role:         'admin',
+    customerId:   null,
+    active:       true,
+    createdAt:    new Date().toISOString()
+  }];
+
+  document.getElementById('seedResult').textContent = JSON.stringify(seed, null, 2);
+  toast('JSON generated — click it to copy', 'ok');
+}
+
+async function copySeed() {
+  const t = document.getElementById('seedResult').textContent;
+  if (t.startsWith('Fill')) return;
+  await navigator.clipboard.writeText(t);
+  toast('JSON copied to clipboard!', 'ok');
+}
+
+// ── TOAST ──────────────────────────────────────────────
+function toast(msg, type = 'ok') {
+  const w = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = `toast \${type}`;
+  t.textContent = (type === 'ok' ? '✅ ' : '❌ ') + msg;
+  w.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+</script>
+</body>
+</html>
