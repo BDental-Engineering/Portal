@@ -3,10 +3,10 @@
     "id": "admin-001",
     "name": "Admin",
     "email": "sales@bdentalengineering.co.uk",
-    "passwordHash": "6d6c7c7fc1a8e547572757dbe0b090601347e2dbff390ede99ab4bea7e299511",
+    "passwordHash": "2221aa193aea3b3fdee120c146c302fdb6ea606dbf4dfc5e1d587ec4b1aedf74",
     "role": "admin",
     "customerId": null,
     "active": true,
-    "createdAt": "2026-08-04T16:25:56.238Z"
+    "createdAt": "2026-08-04T16:41:36.995Z"
   }
 ]
