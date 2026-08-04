@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Customer Portal — Sign In</title>
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;--accent:#4f6ef7;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--text:#e2e8f0;--muted:#8892b0;--radius:14px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem 2rem;width:100%;max-width:420px}
+  .logo{display:flex;align-items:center;gap:.75rem;margin-bottom:2rem;justify-content:center}
+  .logo-icon{width:42px;height:42px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center}
+  .logo-icon svg{width:24px;height:24px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .logo-text{font-size:1.25rem;font-weight:700;color:var(--text)}
+  .logo-sub{font-size:.75rem;color:var(--muted);margin-top:2px}
+  h2{font-size:1.4rem;font-weight:700;margin-bottom:.4rem;text-align:center}
+  .subtitle{color:var(--muted);font-size:.875rem;text-align:center;margin-bottom:2rem}
+  label{display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
+  .field{margin-bottom:1.25rem}
+  input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;color:var(--text);font-size:.95rem;outline:none;transition:border-color .2s}
+  input:focus{border-color:var(--accent)}
+  .btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.85rem;font-size:1rem;font-weight:600;cursor:pointer;transition:opacity .2s;margin-top:.5rem}
+  .btn:hover{opacity:.88}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .error{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:.75rem 1rem;color:var(--red);font-size:.875rem;margin-bottom:1rem;display:none}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:.5rem}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    <div>
+      <div class="logo-text">Customer Portal</div>
+      <div class="logo-sub">Secure Client Access</div>
+    </div>
+  </div>
+  <h2>Welcome back</h2>
+  <p class="subtitle">Sign in to access your portal</p>
+  <div class="error" id="err"></div>
+  <form id="loginForm">
+    <div class="field">
+      <label>Email address</label>
+      <input type="email" id="email" placeholder="you@example.com" required autocomplete="email"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password"/>
+    </div>
+    <button class="btn" type="submit" id="submitBtn">Sign In</button>
+  </form>
+</div>
+<script>
+const form=document.getElementById('loginForm');
+const err=document.getElementById('err');
+const btn=document.getElementById('submitBtn');
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  err.style.display='none';
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner"></span>Signing in…';
+  try{
+    const r=await fetch('/api/portal-auth',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'login',email:document.getElementById('email').value.trim(),password:document.getElementById('password').value})});
+    const d=await r.json();
+    if(!r.ok||!d.success){throw new Error(d.error||'Invalid credentials');}
+    window.location.href=d.role==='admin'?'portal-admin.html':'portal-customer.html';
+  }catch(e2){
+    err.textContent=e2.message;
+    err.style.display='block';
+    btn.disabled=false;
+    btn.textContent='Sign In';
+  }
+});
+</script>
+</body>
+</html>
