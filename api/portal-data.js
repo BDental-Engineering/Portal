@@ -25,20 +25,28 @@ export default async function handler(req, res) {
 
   if (!authRes.ok) return res.status(401).json({ error: 'Not authenticated' });
 
- const companyUuid = session.customerId;
-const isAdmin = session.role === 'admin';
+  // ← these two lines were missing
+  const session = await authRes.json();
+  const { resource } = req.query;
 
-if (!companyUuid && !isAdmin) return res.status(400).json({ error: 'No company linked to this account' });
+  const companyUuid = session.customerId;
+  const isAdmin = session.role === 'admin';
 
-// Assets
-if (!resource || resource === 'assets') {
-  const endpoint = isAdmin
-    ? 'asset.json'
-    : 'asset.json?%24filter=company_uuid%20eq%20' + companyUuid;
-  const assets = await sm8Get(endpoint);
-  return res.status(200).json({ assets: assets || [] });
-}
+  if (!companyUuid && !isAdmin) {
+    return res.status(400).json({ error: 'No company linked to this account' });
+  }
 
+  if (!resource || resource === 'assets') {
+    const endpoint = isAdmin
+      ? 'asset.json'
+      : 'asset.json?%24filter=company_uuid%20eq%20' + companyUuid;
+
+    console.log('Fetching SM8 endpoint:', endpoint);
+    const assets = await sm8Get(endpoint);
+    console.log('Assets returned:', assets ? assets.length : 'null');
+
+    return res.status(200).json({ assets: assets || [] });
+  }
 
   return res.status(400).json({ error: 'Unknown resource' });
 }
