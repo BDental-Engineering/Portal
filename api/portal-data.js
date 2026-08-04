@@ -1,11 +1,10 @@
 const SM8_KEY = process.env.SERVICEM8_API_KEY;
-const SM8_AUTH = 'Basic ' + Buffer.from(SM8_KEY + ':').toString('base64');
 
 async function sm8Get(endpoint) {
   const r = await fetch('https://api.servicem8.com/api_1.0/' + endpoint, {
     headers: {
-      Authorization: SM8_AUTH,
-      Accept: 'application/json'
+      'X-Api-Key': SM8_KEY,
+      'Accept': 'application/json'
     }
   });
   if (!r.ok) {
@@ -25,7 +24,6 @@ export default async function handler(req, res) {
 
   if (!authRes.ok) return res.status(401).json({ error: 'Not authenticated' });
 
-  // ← these two lines were missing
   const session = await authRes.json();
   const { resource } = req.query;
 
