@@ -14,10 +14,10 @@ const SESSION_HOURS = 8;
 
 // ── GitHub helpers ─────────────────────────────────────
 async function ghGet(path) {
-  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`;
+  const url = `https://api.github.com/repos/{GH_OWNER}/{GH_REPO}/contents/{path}?ref={GH_BRANCH}`;
   const r = await fetch(url, {
     headers: {
-      Authorization: `token \${GH_TOKEN}`,
+      Authorization: `token \{GH_TOKEN}`,
       Accept: 'application/vnd.github.v3+json'
     }
   });
