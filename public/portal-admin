@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Portal</title>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3350;--accent:#4f6ef7;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;--text:#e2e8f0;--muted:#8892b0;--radius:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+/* NAV */
+nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
+.nav-brand{display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:1.05rem}
+.nav-icon{width:34px;height:34px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.nav-icon svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.badge-admin{background:rgba(79,110,247,.18);color:var(--accent);border-radius:20px;padding:.25rem .75rem;font-size:.75rem;font-weight:700;letter-spacing:.05em}
+.btn-signout{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);padding:.4rem .9rem;cursor:pointer;font-size:.85rem;transition:all .2s}
+.btn-signout:hover{border-color:var(--red);color:var(--red)}
+/* STAT CARDS */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;padding:1.5rem 2rem 0}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem}
+.stat-label{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
+.stat-val{font-size:2rem;font-weight:800;color:var(--text)}
+.stat-icon{float:right;opacity:.18;font-size:2rem;margin-top:-2.2rem}
+/* TABS */
+.tabs-wrap{padding:1.5rem 2rem 0}
+.tabs{display:flex;gap:.25rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.3rem;width:fit-content}
+.tab{padding:.5rem 1.25rem;border-radius:7px;cursor:pointer;font-size:.875rem;font-weight:600;color:var(--muted);border:none;background:transparent;transition:all .2s}
+.tab.active{background:var(--accent);color:#fff}
+.tab:hover:not(.active){color:var(--text)}
+/* PANELS */
+.panel{display:none;padding:1.5rem 2rem 2rem}
+.panel.active{display:block}
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:340px}
+.search-wrap svg{position:absolute;left:.75rem;top:50%;transform:translateY(-50%);width:16px;height:16px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.search-wrap input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .75rem .6rem 2.25rem;color:var(--text);font-size:.875rem;outline:none}
+.search-wrap input:focus{border-color:var(--accent)}
+select.filter{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem .9rem;color:var(--text);font-size:.875rem;outline:none;cursor:pointer}
+select.filter:focus{border-color:var(--accent)}
+.btn-primary{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.25rem;font-size:.875rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem;white-space:nowrap}
+.btn-primary:hover{opacity:.88}
+/* TABLE */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--surface2)}
+th{padding:.85rem 1rem;text-align:left;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
+td{padding:.85rem 1rem;font-size:.875rem;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.02)}
+.actions{display:flex;gap:.5rem}
+.btn-icon{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.35rem .6rem;cursor:pointer;color:var(--muted);font-size:.8rem;transition:all .2s}
+.btn-icon:hover{border-color:var(--accent);color:var(--accent)}
+.btn-icon.danger:hover{border-color:var(--red);color:var(--red)}
+/* BADGES */
+.badge{display:inline-block;border-radius:20px;padding:.2rem .65rem;font-size:.72rem;font-weight:700;letter-spacing:.04em}
+.badge-green{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red)}
+.badge-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.badge-blue{background:rgba(79,110,247,.15);color:var(--accent)}
+.badge-muted{background:rgba(136,146,176,.12);color:var(--muted)}
+/* STATUS DOT */
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.5rem}
+.dot-green{background:var(--green)}
+.dot-amber{background:var(--amber)}
+.dot-red{background:var(--red)}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
+.modal-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-header h3{font-size:1rem;font-weight:700}
+.modal-close{background:none;border:none;color:var(--muted);font-size:1.4rem;cursor:pointer;line-height:1;padding:.1rem .4rem;border-radius:4px}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:1.5rem}
+.modal-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.75rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select,.field textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;color:var(--text);font-size:.875rem;outline:none;transition:border-color .2s;font-family:inherit}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent)}
+.field textarea{resize:vertical;min-height:80px}
+.btn-cancel{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.6rem 1.25rem;color:var(--text);font-size:.875rem;font-weight:600;cursor:pointer}
+.btn-cancel:hover{border-color:var(--muted)}
+.btn-save{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.5rem;font-size:.875rem;font-weight:600;cursor:pointer}
+.btn-save:hover{opacity:.88}
+.btn-danger{background:var(--red);color:#fff;border:none;border-radius:8px;padding:.6rem 1.25rem;font-size:.875rem;font-weight:600;cursor:pointer}
+/* EMPTY */
+.empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
+.empty svg{width:48px;height:48px;margin:0 auto 1rem;display:block;opacity:.3;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+/* TOAST */
+.toast-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:.5rem}
+.toast{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.75rem 1.25rem;font-size:.875rem;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:slideIn .3s ease;display:flex;align-items:center;gap:.6rem;min-width:240px}
+.toast.success{border-left:3px solid var(--green)}
+.toast.error{border-left:3px solid var(--red)}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-icon">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    </div>
+    Customer Portal — Admin
+  </div>
+  <div class="nav-right">
+    <span class="badge-admin">ADMIN</span>
+    <span id="adminName" style="color:var(--muted);font-size:.875rem"></span>
+    <button class="btn-signout" onclick="signOut()">Sign Out</button>
+  </div>
+</nav>
+
+<!-- STAT CARDS -->
+<div class="stats" id="statsRow">
+  <div class="stat-card"><div class="stat-label">Customers</div><div class="stat-val" id="statCustomers">—</div></div>
+  <div class="stat-card"><div class="stat-label">Assets</div><div class="stat-val" id="statAssets">—</div></div>
+  <div class="stat-card"><div class="stat-label">Documents</div><div class="stat-val" id="statDocs">—</div></div>
+  <div class="stat-card"><div class="stat-label">Manuals</div><div class="stat-val" id="statManuals">—</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('customers')">Customers</button>
+    <button class="tab" onclick="switchTab('assets')">Assets</button>
+    <button class="tab" onclick="switchTab('documents')">Documents</button>
+    <button class="tab" onclick="switchTab('manuals')">Manuals</button>
+    <button class="tab" onclick="switchTab('users')">Users</button>
+  </div>
+</div>
+
+<!-- CUSTOMERS PANEL -->
+<div class="panel active" id="panel-customers">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="custSearch" placeholder="Search customers…" oninput="renderCustomers()"/>
+    </div>
+    <button class="btn-primary" onclick="openModal('customer')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Add Customer
+    </button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody id="custTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ASSETS PANEL -->
+<div class="panel" id="panel-assets">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="assetSearch" placeholder="Search assets…" oninput="renderAssets()"/>
+    </div>
+    <select class="filter" id="assetCustFilter" onchange="renderAssets()"><option value="">All Customers</option></select>
+    <button class="btn-primary" onclick="openModal('asset')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Add Asset
+    </button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Make / Model</th><th>Serial</th><th>Customer</th><th>Status</th><th>Install Date</th><th>Actions</th></tr></thead>
+      <tbody id="assetTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- DOCUMENTS PANEL -->
+<div class="panel" id="panel-documents">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="docSearch" placeholder="Search documents…" oninput="renderDocuments()"/>
+    </div>
+    <select class="filter" id="docCustFilter" onchange="renderDocuments()"><option value="">All Customers</option></select>
+    <select class="filter" id="docAssetFilter" onchange="renderDocuments()"><option value="">All Assets</option></select>
+    <button class="btn-primary" onclick="openModal('document')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Add Document
+    </button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Title</th><th>Type</th><th>Customer</th><th>Asset</th><th>Uploaded</th><th>Actions</th></tr></thead>
+      <tbody id="docTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MANUALS PANEL -->
+<div class="panel" id="panel-manuals">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="manSearch" placeholder="Search manuals…" oninput="renderManuals()"/>
+    </div>
+    <button class="btn-primary" onclick="openModal('manual')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Add Manual
+    </button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Title</th><th>Make</th><th>Model</th><th>Description</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="manTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- USERS PANEL -->
+<div class="panel" id="panel-users">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="userSearch" placeholder="Search users…" oninput="renderUsers()"/>
+    </div>
+    <button class="btn-primary" onclick="openModal('user')">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Create User
+    </button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Customer</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody id="userTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- MODALS -->
+<!-- Customer Modal -->
+<div class="overlay" id="modal-customer">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="custModalTitle">Add Customer</h3>
+      <button class="modal-close" onclick="closeModal('customer')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="custId"/>
+      <div class="form-row">
+        <div class="field"><label>Name *</label><input type="text" id="custName" placeholder="Acme Corp"/></div>
+        <div class="field"><label>Email</label><input type="email" id="custEmail" placeholder="contact@acme.com"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Phone</label><input type="text" id="custPhone" placeholder="+1 555 000 0000"/></div>
+        <div class="field"><label>Status</label>
+          <select id="custActive"><option value="true">Active</option><option value="false">Inactive</option></select>
+        </div>
+      </div>
+      <div class="field"><label>Address</label><textarea id="custAddress" placeholder="123 Main St…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('customer')">Cancel</button>
+      <button class="btn-save" onclick="saveCustomer()">Save Customer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Asset Modal -->
+<div class="overlay" id="modal-asset">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="assetModalTitle">Add Asset</h3>
+      <button class="modal-close" onclick="closeModal('asset')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="assetId"/>
+      <div class="form-row">
+        <div class="field"><label>Asset Name *</label><input type="text" id="assetName" placeholder="Boiler Unit A"/></div>
+        <div class="field"><label>Customer *</label><select id="assetCustomer"></select></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Make *</label><input type="text" id="assetMake" placeholder="Vaillant"/></div>
+        <div class="field"><label>Model *</label><input type="text" id="assetModel" placeholder="ecoTEC Pro"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Serial Number</label><input type="text" id="assetSerial" placeholder="SN-000123"/></div>
+        <div class="field"><label>Install Date</label><input type="date" id="assetInstall"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Status</label>
+          <select id="assetStatus">
+            <option value="active">Active (Green)</option>
+            <option value="attention">Needs Attention (Amber)</option>
+            <option value="fault">Fault (Red)</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="field"><label>Active</label>
+          <select id="assetActive"><option value="true">Yes</option><option value="false">No</option></select>
+        </div>
+      </div>
+      <div class="field"><label>Notes</label><textarea id="assetNotes" placeholder="Any notes…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('asset')">Cancel</button>
+      <button class="btn-save" onclick="saveAsset()">Save Asset</button>
+    </div>
+  </div>
+</div>
+
+<!-- Document Modal -->
+<div class="overlay" id="modal-document">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="docModalTitle">Add Document</h3>
+      <button class="modal-close" onclick="closeModal('document')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="docId"/>
+      <div class="field"><label>Title *</label><input type="text" id="docTitle" placeholder="Annual Service Report"/></div>
+      <div class="form-row">
+        <div class="field"><label>Type</label>
+          <select id="docType">
+            <option value="Manual">Manual</option>
+            <option value="Warranty">Warranty</option>
+            <option value="Invoice">Invoice</option>
+            <option value="Certificate">Certificate</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field"><label>Customer *</label><select id="docCustomer" onchange="populateDocAssets()"></select></div>
+      </div>
+      <div class="field"><label>Linked Asset (optional)</label><select id="docAsset"><option value="">— None —</option></select></div>
+      <div class="field"><label>File URL *</label><input type="url" id="docUrl" placeholder="https://…"/></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('document')">Cancel</button>
+      <button class="btn-save" onclick="saveDocument()">Save Document</button>
+    </div>
+  </div>
+</div>
+
+<!-- Manual Modal -->
+<div class="overlay" id="modal-manual">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="manModalTitle">Add Manual</h3>
+      <button class="modal-close" onclick="closeModal('manual')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="manId"/>
+      <div class="field"><label>Title *</label><input type="text" id="manTitle" placeholder="Installation & Service Manual"/></div>
+      <div class="form-row">
+        <div class="field"><label>Make *</label><input type="text" id="manMake" placeholder="Vaillant"/></div>
+        <div class="field"><label>Model *</label><input type="text" id="manModel" placeholder="ecoTEC Pro"/></div>
+      </div>
+      <div class="field"><label>File URL *</label><input type="url" id="manUrl" placeholder="https://…"/></div>
+      <div class="field"><label>Description</label><textarea id="manDesc" placeholder="Brief description…"></textarea></div>
+      <div class="field"><label>Status</label>
+        <select id="manActive"><option value="true">Active</option><option value="false">Inactive</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('manual')">Cancel</button>
+      <button class="btn-save" onclick="saveManual()">Save Manual</button>
+    </div>
+  </div>
+</div>
+
+<!-- User Modal -->
+<div class="overlay" id="modal-user">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="userModalTitle">Create Portal User</h3>
+      <button class="modal-close" onclick="closeModal('user')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="userId"/>
+      <div class="form-row">
+        <div class="field"><label>Full Name *</label><input type="text" id="userName" placeholder="Jane Smith"/></div>
+        <div class="field"><label>Email *</label><input type="email" id="userEmail" placeholder="jane@acme.com"/></div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Role</label>
+          <select id="userRole" onchange="toggleUserCustomer()">
+            <option value="customer">Customer</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="field" id="userCustomerField"><label>Customer Account</label><select id="userCustomer"></select></div>
+      </div>
+      <div class="field" id="pwField"><label>Password *</label><input type="password" id="userPassword" placeholder="Min 8 characters"/></div>
+      <div class="field" id="resetPwField" style="display:none">
+        <label>New Password (leave blank to keep current)</label>
+        <input type="password" id="userPasswordReset" placeholder="New password…"/>
+      </div>
+      <div class="field" id="activeField" style="display:none">
+        <label>Status</label>
+        <select id="userActive"><option value="true">Active</option><option value="false">Inactive</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('user')">Cancel</button>
+      <button class="btn-save" id="userSaveBtn" onclick="saveUser()">Create User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="overlay" id="modal-confirm">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-header">
+      <h3>Confirm Delete</h3>
+      <button class="modal-close" onclick="closeModal('confirm')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--muted);font-size:.9rem" id="confirmMsg">Are you sure you want to delete this item? This cannot be undone.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('confirm')">Cancel</button>
+      <button class="btn-danger" onclick="confirmDeleteAction()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────
+let customers=[],assets=[],documents=[],manuals=[],users=[];
+let deleteCallback=null;
+let currentTab='customers';
+
+// ── INIT ───────────────────────────────────────────────
+(async()=>{
+  const s=await api('/api/portal-auth?action=session');
+  if(!s.ok||s.data.role!=='admin'){location.href='portal-login.html';return;}
+  document.getElementById('adminName').textContent=s.data.name||'';
+  await Promise.all([loadCustomers(),loadAssets(),loadDocuments(),loadManuals(),loadUsers()]);
+  updateStats();
+})();
+
+// ── API HELPER ─────────────────────────────────────────
+async function api(url,method='GET',body){
+  const opts={method,headers:{'Content-Type':'application/json'},credentials:'include'};
+  if(body)opts.body=JSON.stringify(body);
+  const r=await fetch(url,opts);
+  const data=await r.json().catch(()=>({}));
+  return{ok:r.ok,data,status:r.status};
+}
+
+// ── LOAD ───────────────────────────────────────────────
+async function loadCustomers(){const r=await api('/api/portal-customers');if(r.ok)customers=r.data;renderCustomers();populateCustomerFilters();}
+async function loadAssets(){const r=await api('/api/portal-assets');if(r.ok)assets=r.data;renderAssets();}
+async function loadDocuments(){const r=await api('/api/portal-documents');if(r.ok)documents=r.data;renderDocuments();}
+async function loadManuals(){const r=await api('/api/portal-manuals');if(r.ok)manuals=r.data;renderManuals();}
+async function loadUsers(){const r=await api('/api/portal-users');if(r.ok)users=r.data;renderUsers();}
+
+// ── STATS ──────────────────────────────────────────────
+function updateStats(){
+  document.getElementById('statCustomers').textContent=customers.filter(c=>c.active).length;
+  document.getElementById('statAssets').textContent=assets.filter(a=>a.active).length;
+  document.getElementById('statDocs').textContent=documents.filter(d=>d.active).length;
+  document.getElementById('statManuals').textContent=manuals.filter(m=>m.active).length;
+}
+
+// ── TABS ───────────────────────────────────────────────
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    const tabs=['customers','assets','documents','manuals','users'];
+    t.classList.toggle('active',tabs[i]===tab);
+  });
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+}
+
+// ── CUSTOMER FILTERS ───────────────────────────────────
+function populateCustomerFilters(){
+  const opts=customers.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  document.getElementById('assetCustFilter').innerHTML='<option value="">All Customers</option>'+opts;
+  document.getElementById('docCustFilter').innerHTML='<option value="">All Customers</option>'+opts;
+  // Modal selects
+  ['assetCustomer','docCustomer','userCustomer'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.innerHTML=(id==='docCustomer'?'<option value="">— Select —</option>':'')+opts;
+  });
+}
+
+// ── RENDER CUSTOMERS ───────────────────────────────────
+function renderCustomers(){
+  const q=document.getElementById('custSearch').value.toLowerCase();
+  const rows=customers.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email?.toLowerCase().includes(q));
+  const tb=document.getElementById('custTable');
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No customers found</div></td></tr>`;return;}
+  tb.innerHTML=rows.map(c=>`
+    <tr>
+      <td><strong>${esc(c.name)}</strong></td>
+      <td>${esc(c.email||'—')}</td>
+      <td>${esc(c.phone||'—')}</td>
+      <td><span class="badge \${c.active?'badge-green':'badge-red'}">${c.active?'Active':'Inactive'}</span></td>
+      <td style="color:var(--muted)">${fmtDate(c.createdAt)}</td>
+      <td><div class="actions">
+        <button class="btn-icon" onclick="editCustomer('${c.id}')">✏️ Edit</button>
+        <button class="btn-icon danger" onclick="deleteItem('customer','${c.id}','${esc(c.name)}')">🗑</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+// ── RENDER ASSETS ──────────────────────────────────────
+function renderAssets(){
+  const q=document.getElementById('assetSearch').value.toLowerCase();
+  const cf=document.getElementById('assetCustFilter').value;
+  let rows=assets.filter(a=>(!cf||a.customerId===cf)&&(!q||a.name.toLowerCase().includes(q)||a.make?.toLowerCase().includes(q)||a.model?.toLowerCase().includes(q)));
+  const tb=document.getElementById('assetTable');
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>No assets found</div></td></tr>`;return;}
+  tb.innerHTML=rows.map(a=>{
+    const cust=customers.find(c=>c.id===a.customerId);
+    const dotClass=a.status==='attention'?'dot-amber':a.status==='fault'?'dot-red':'dot-green';
+    return`<tr>
+      <td><span class="dot \${dotClass}"></span><strong>${esc(a.name)}</strong></td>
+      <td>${esc(a.make||'—')} / \${esc(a.model||'—')}</td>
+      <td style="color:var(--muted);font-family:monospace">${esc(a.serialNumber||'—')}</td>
+      <td>${cust?esc(cust.name):'<span style="color:var(--muted)">Unknown</span>'}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td style="color:var(--muted)">${a.installDate||'—'}</td>
+      <td><div class="actions">
+        <button class="btn-icon" onclick="editAsset('${a.id}')">✏️ Edit</button>
+        <button class="btn-icon danger" onclick="deleteItem('asset','${a.id}','${esc(a.name)}')">🗑</button>
+      </div></td>
+    </tr>`;}).join('');
+}
+
+function statusBadge(s){
+  if(s==='attention')return`<span class="badge badge-amber">Needs Attention</span>`;
+  if(s==='fault')return`<span class="badge badge-red">Fault</span>`;
+  if(s==='inactive')return`<span class="badge badge-muted">Inactive</span>`;
+  return`<span class="badge badge-green">Active</span>`;
+}
+
+// ── RENDER DOCUMENTS ───────────────────────────────────
+function renderDocuments(){
+  const q=document.getElementById('docSearch').value.toLowerCase();
+  const cf=document.getElementById('docCustFilter').value;
+  const af=document.getElementById('docAssetFilter').value;
+  let rows=documents.filter(d=>(!cf||d.customerId===cf)&&(!af||d.assetId===af)&&(!q||d.title.toLowerCase().includes(q)));
+  const tb=document.getElementById('docTable');
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>No documents found</div></td></tr>`;return;}
+  tb.innerHTML=rows.map(d=>{
+    const cust=customers.find(c=>c.id===d.customerId);
+    const asset=assets.find(a=>a.id===d.assetId);
+    return`<tr>
+      <td><a href="${esc(d.fileUrl)}" target="_blank" style="color:var(--accent)">${esc(d.title)}</a></td>
+      <td>${docTypeBadge(d.type)}</td>
+      <td>${cust?esc(cust.name):'—'}</td>
+      <td>${asset?esc(asset.name):'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="color:var(--muted)">${fmtDate(d.uploadedAt)}</td>
+      <td><div class="actions">
+        <button class="btn-icon danger" onclick="deleteItem('document','${d.id}','${esc(d.title)}')">🗑</button>
+      </div></td>
+    </tr>`;}).join('');
+}
+
+function docTypeBadge(t){
+  const map={Manual:'badge-blue',Warranty:'badge-green',Invoice:'badge-amber',Certificate:'badge-green',Other:'badge-muted'};
+  return`<span class="badge \${map[t]||'badge-muted'}">${t||'Other'}</span>`;
+}
+
+// ── RENDER MANUALS ─────────────────────────────────────
+function renderManuals(){
+  const q=document.getElementById('manSearch').value.toLowerCase();
+  let rows=manuals.filter(m=>!q||m.title.toLowerCase().includes(q)||m.make?.toLowerCase().includes(q)||m.model?.toLowerCase().includes(q));
+  const tb=document.getElementById('manTable');
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="6"><div class="empty"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>No manuals found</div></td></tr>`;return;}
+  tb.innerHTML=rows.map(m=>`
+    <tr>
+      <td><a href="${esc(m.fileUrl)}" target="_blank" style="color:var(--accent)">${esc(m.title)}</a></td>
+      <td>${esc(m.make||'—')}</td>
+      <td>${esc(m.model||'—')}</td>
+      <td style="color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(m.description||'—')}</td>
+      <td><span class="badge \${m.active?'badge-green':'badge-red'}">${m.active?'Active':'Inactive'}</span></td>
+      <td><div class="actions">
+        <button class="btn-icon" onclick="editManual('${m.id}')">✏️ Edit</button>
+        <button class="btn-icon danger" onclick="deleteItem('manual','${m.id}','${esc(m.title)}')">🗑</button>
+      </div></td>
+    </tr>`).join('');
+}
+
+// ── RENDER USERS ───────────────────────────────────────
+function renderUsers(){
+  const q=document.getElementById('userSearch').value.toLowerCase();
+  let rows=users.filter(u=>!q||u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q));
+  const tb=document.getElementById('userTable');
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No users found</div></td></tr>`;return;}
+  tb.innerHTML=rows.map(u=>{
+    const cust=customers.find(c=>c.id===u.customerId);
+    return`<tr>
+      <td><strong>${esc(u.name)}</strong></td>
+      <td>${esc(u.email)}</td>
+      <td><span class="badge \${u.role==='admin'?'badge-blue':'badge-muted'}">${u.role}</span></td>
+      <td>${cust?esc(cust.name):'<span style="color:var(--muted)">—</span>'}</td>
+      <td><span class="badge \${u.active?'badge-green':'badge-red'}">${u.active?'Active':'Inactive'}</span></td>
+      <td style="color:var(--muted)">${fmtDate(u.createdAt)}</td>
+      <td><div class="actions">
+        <button class="btn-icon" onclick="editUser('${u.id}')">✏️ Edit</button>
+        <button class="btn-icon" onclick="toggleUserActive('${u.id}',${!u.active})">${u.active?'🔒 Deactivate':'✅ Activate'}</button>
+      </div></td>
+    </tr>`;}).join('');
+}
+
+// ── MODALS ─────────────────────────────────────────────
+function openModal(type){document.getElementById('modal-'+type).classList.add('open');}
+function closeModal(type){document.getElementById('modal-'+type).classList.remove('open');}
+
+// ── CUSTOMER MODAL ─────────────────────────────────────
+function editCustomer(id){
+  const c=customers.find(x=>x.id===id);if(!c)return;
+  document.getElementById('custModalTitle').textContent='Edit Customer';
+  document.getElementById('custId').value=c.id;
+  document.getElementById('custName').value=c.name||'';
+  document.getElementById('custEmail').value=c.email||'';
+  document.getElementById('custPhone').value=c.phone||'';
+  document.getElementById('custAddress').value=c.address||'';
+  document.getElementById('custActive').value=String(c.active);
+  openModal('customer');
+}
+function resetCustomerModal(){
+  document.getElementById('custModalTitle').textContent='Add Customer';
+  ['custId','custName','custEmail','custPhone','custAddress'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('custActive').value='true';
+}
+document.getElementById('modal-customer').addEventListener('click',e=>{if(e.target===document.getElementById('modal-customer'))closeModal('customer');});
+
+async function saveCustomer(){
+  const id=document.getElementById('custId').value;
+  const body={name:document.getElementById('custName').value.trim(),email:document.getElementById('custEmail').value.trim(),phone:document.getElementById('custPhone').value.trim(),address:document.getElementById('custAddress').value.trim(),active:document.getElementById('custActive').value==='true'};
+  if(!body.name){toast('Name is required','error');return;}
+  const r=id?await api('/api/portal-customers','PUT',{id,...body}):await api('/api/portal-customers','POST',body);
+  if(r.ok){toast(id?'Customer updated':'Customer created','success');closeModal('customer');resetCustomerModal();await loadCustomers();updateStats();}
+  else toast(r.data.error||'Error saving customer','error');
+}
+
+// ── ASSET MODAL ────────────────────────────────────────
+function editAsset(id){
+  const a=assets.find(x=>x.id===id);if(!a)return;
+  document.getElementById('assetModalTitle').textContent='Edit Asset';
+  document.getElementById('assetId').value=a.id;
+  document.getElementById('assetName').value=a.name||'';
+  document.getElementById('assetMake').value=a.make||'';
+  document.getElementById('assetModel').value=a.model||'';
+  document.getElementById('assetSerial').value=a.serialNumber||'';
+  document.getElementById('assetInstall').value=a.installDate||'';
+  document.getElementById('assetNotes').value=a.notes||'';
+  document.getElementById('assetStatus').value=a.status||'active';
+  document.getElementById('assetActive').value=String(a.active);
+  document.getElementById('assetCustomer').value=a.customerId||'';
+  openModal('asset');
+}
+document.getElementById('modal-asset').addEventListener('click',e=>{if(e.target===document.getElementById('modal-asset'))closeModal('asset');});
+
+async function saveAsset(){
+  const id=document.getElementById('assetId').value;
+  const body={customerId:document.getElementById('assetCustomer').value,name:document.getElementById('assetName').value.trim(),make:document.getElementById('assetMake').value.trim(),model:document.getElementById('assetModel').value.trim(),serialNumber:document.getElementById('assetSerial').value.trim(),installDate:document.getElementById('assetInstall').value,notes:document.getElementById('assetNotes').value.trim(),status:document.getElementById('assetStatus').value,active:document.getElementById('assetActive').value==='true'};
+  if(!body.name||!body.customerId){toast('Name and customer are required','error');return;}
+  const r=id?await api('/api/portal-assets','PUT',{id,...body}):await api('/api/portal-assets','POST',body);
+  if(r.ok){toast(id?'Asset updated':'Asset created','success');closeModal('asset');document.getElementById('assetId').value='';document.getElementById('assetModalTitle').textContent='Add Asset';await loadAssets();updateStats();}
+  else toast(r.data.error||'Error saving asset','error');
+}
+
+// ── DOCUMENT MODAL ─────────────────────────────────────
+async function populateDocAssets(){
+  const cid=document.getElementById('docCustomer').value;
+  const sel=document.getElementById('docAsset');
+  const filtered=assets.filter(a=>a.customerId===cid);
+  sel.innerHTML='<option value="">— None —</option>'+filtered.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+}
+document.getElementById('modal-document').addEventListener('click',e=>{if(e.target===document.getElementById('modal-document'))closeModal('document');});
+
+async function saveDocument(){
+  const id=document.getElementById('docId').value;
+  const body={customerId:document.getElementById('docCustomer').value,assetId:document.getElementById('docAsset').value||null,title:document.getElementById('docTitle').value.trim(),type:document.getElementById('docType').value,fileUrl:document.getElementById('docUrl').value.trim(),active:true};
+  if(!body.title||!body.customerId||!body.fileUrl){toast('Title, customer and URL are required','error');return;}
+  const r=id?await api('/api/portal-documents','PUT',{id,...body}):await api('/api/portal-documents','POST',body);
+  if(r.ok){toast('Document saved','success');closeModal('document');document.getElementById('docId').value='';await loadDocuments();updateStats();}
+  else toast(r.data.error||'Error saving document','error');
+}
+
+// ── MANUAL MODAL ───────────────────────────────────────
+function editManual(id){
+  const m=manuals.find(x=>x.id===id);if(!m)return;
+  document.getElementById('manModalTitle').textContent='Edit Manual';
+  document.getElementById('manId').value=m.id;
+  document.getElementById('manTitle').value=m.title||'';
+  document.getElementById('manMake').value=m.make||'';
+  document.getElementById('manModel').value=m.model||'';
+  document.getElementById('manUrl').value=m.fileUrl||'';
+  document.getElementById('manDesc').value=m.description||'';
+  document.getElementById('manActive').value=String(m.active);
+  openModal('manual');
+}
+document.getElementById('modal-manual').addEventListener('click',e=>{if(e.target===document.getElementById('modal-manual'))closeModal('manual');});
+
+async function saveManual(){
+  const id=document.getElementById('manId').value;
+  const body={make:document.getElementById('manMake').value.trim(),model:document.getElementById('manModel').value.trim(),title:document.getElementById('manTitle').value.trim(),fileUrl:document.getElementById('manUrl').value.trim(),description:document.getElementById('manDesc').value.trim(),active:document.getElementById('manActive').value==='true'};
+  if(!body.title||!body.make||!body.model||!body.fileUrl){toast('Title, make, model and URL are required','error');return;}
+  const r=id?await api('/api/portal-manuals','PUT',{id,...body}):await api('/api/portal-manuals','POST',body);
+  if(r.ok){toast(id?'Manual updated':'Manual created','success');closeModal('manual');document.getElementById('manId').value='';document.getElementById('manModalTitle').textContent='Add Manual';await loadManuals();updateStats();}
+  else toast(r.data.error||'Error saving manual','error');
+}
+
+// ── USER MODAL ─────────────────────────────────────────
+function toggleUserCustomer(){
+  const role=document.getElementById('userRole').value;
+  document.getElementById('userCustomerField').style.display=role==='admin'?'none':'block';
+}
+function editUser(id){
+  const u=users.find(x=>x.id===id);if(!u)return;
+  document.getElementById('userModalTitle').textContent='Edit User';
+  document.getElementById('userId').value=u.id;
+  document.getElementById('userName').value=u.name||'';
+  document.getElementById('userEmail').value=u.email||'';
+  document.getElementById('userRole').value=u.role||'customer';
+  document.getElementById('userCustomer').value=u.customerId||'';
+  document.getElementById('userActive').value=String(u.active);
+  document.getElementById('pwField').style.display='none';
+  document.getElementById('resetPwField').style.display='block';
+  document.getElementById('activeField').style.display='block';
+  document.getElementById('userSaveBtn').textContent='Update User';
+  toggleUserCustomer();
+  openModal('user');
+}
+document.getElementById('modal-user').addEventListener('click',e=>{if(e.target===document.getElementById('modal-user'))closeModal('user');});
+
+async function saveUser(){
+  const id=document.getElementById('userId').value;
+  const pw=id?document.getElementById('userPasswordReset').value:document.getElementById('userPassword').value;
+  const body={name:document.getElementById('userName').value.trim(),email:document.getElementById('userEmail').value.trim(),role:document.getElementById('userRole').value,customerId:document.getElementById('userCustomer').value||null,active:id?document.getElementById('userActive').value==='true':true};
+  if(pw)body.password=pw;
+  if(!body.name||!body.email){toast('Name and email are required','error');return;}
+  if(!id&&!pw){toast('Password is required for new users','error');return;}
+  const r=id?await api('/api/portal-users','PUT',{id,...body}):await api('/api/portal-users','POST',body);
+  if(r.ok){toast(id?'User updated':'User created','success');closeModal('user');document.getElementById('userId').value='';document.getElementById('userModalTitle').textContent='Create Portal User';document.getElementById('pwField').style.display='block';document.getElementById('resetPwField').style.display='none';document.getElementById('activeField').style.display='none';document.getElementById('userSaveBtn').textContent='Create User';await loadUsers();}
+  else toast(r.data.error||'Error saving user','error');
+}
+
+async function toggleUserActive(id,active){
+  const r=await api('/api/portal-users','PUT',{id,active});
+  if(r.ok){toast(active?'User activated':'User deactivated','success');await loadUsers();}
+  else toast('Error updating user','error');
+}
+
+// ── DELETE ─────────────────────────────────────────────
+function deleteItem(type,id,name){
+  document.getElementById('confirmMsg').textContent=`Delete "${name}"? This cannot be undone.`;
+  deleteCallback=async()=>{
+    const endpoints={customer:'/api/portal-customers',asset:'/api/portal-assets',document:'/api/portal-documents',manual:'/api/portal-manuals'};
+    const r=await api(endpoints[type],'DELETE',{id});
+    if(r.ok){
+      toast(`${type.charAt(0).toUpperCase()+type.slice(1)} deleted`,'success');
+      closeModal('confirm');
+      if(type==='customer')await loadCustomers();
+      else if(type==='asset')await loadAssets();
+      else if(type==='document')await loadDocuments();
+      else if(type==='manual')await loadManuals();
+      updateStats();
+    }else toast(r.data.error||'Delete failed','error');
+  };
+  openModal('confirm');
+}
+function confirmDeleteAction(){if(deleteCallback)deleteCallback();}
+document.getElementById('modal-confirm').addEventListener('click',e=>{if(e.target===document.getElementById('modal-confirm'))closeModal('confirm');});
+
+// ── DOC ASSET FILTER ───────────────────────────────────
+document.getElementById('docCustFilter').addEventListener('change',function(){
+  const cid=this.value;
+  const filtered=cid?assets.filter(a=>a.customerId===cid):assets;
+  document.getElementById('docAssetFilter').innerHTML='<option value="">All Assets</option>'+filtered.map(a=>`<option value="${a.id}">${esc(a.name)}</option>`).join('');
+  renderDocuments();
+});
+
+// ── SIGN OUT ───────────────────────────────────────────
+async function signOut(){
+  await api('/api/portal-auth','POST',{action:'logout'});
+  location.href='portal-login.html';
+}
+
+// ── HELPERS ────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtDate(d){if(!d)return'—';try{return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch{return d;}}
+function toast(msg,type='success'){
+  const w=document.getElementById('toastWrap');
+  const t=document.createElement('div');
+  t.className=`toast \${type}`;
+  t.innerHTML=(type==='success'?'✅ ':'❌ ')+msg;
+  w.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+</script>
+</body>
+</html>
