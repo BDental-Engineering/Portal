@@ -8,5 +8,14 @@
     "customerId": null,
     "active": true,
     "createdAt": "2026-08-04T16:41:36.995Z"
+  },
+  {
+    "id": "user_002",
+    "email": "client@example.com",
+    "passwordHash": "abc123...",
+    "name": "Acme Engineering",
+    "role": "customer",
+    "active": 1,
+    "customerId": "bea9fa6d-2ecb-4e27-8800-214e08d3dc8b"
   }
 ]
