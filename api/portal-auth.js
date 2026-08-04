@@ -8,23 +8,30 @@ const SESSION_HOURS = 8;
 
 // ── GitHub helpers ─────────────────────────────────────
 async function ghGet(path) {
-  const r = await fetch(
-    `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`,
-    { headers: { Authorization: `token \${GH_TOKEN}`, Accept: 'application/vnd.github.v3+json' } }
-  );
+  const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`;
+  const r = await fetch(url, {
+    headers: {
+      Authorization: `token \${GH_TOKEN}`,
+      Accept: 'application/vnd.github.v3+json'
+    }
+  });
+  
+  const text = await r.text(); // get raw response first
+  console.log('GitHub response status:', r.status);
+  console.log('GitHub response body:', text);
+  
   if (r.status === 404) return { content: null, sha: null };
-  const d = await r.json();
-  return { content: JSON.parse(Buffer.from(d.content, 'base64').toString('utf8')), sha: d.sha };
-}
-
-async function ghPut(path, data, sha) {
-  const body = { message: `update \${path}`, content: Buffer.from(JSON.stringify(data, null, 2)).toString('base64'), branch: GH_BRANCH };
-  if (sha) body.sha = sha;
-  const r = await fetch(
-    `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}`,
-    { method: 'PUT', headers: { Authorization: `token \${GH_TOKEN}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
-  );
-  return r.ok;
+  
+  try {
+    const d = JSON.parse(text);
+    return {
+      content: JSON.parse(Buffer.from(d.content, 'base64').toString('utf8')),
+      sha: d.sha
+    };
+  } catch (e) {
+    console.error('Parse error:', e.message, 'Raw:', text);
+    return { content: null, sha: null };
+  }
 }
 
 // ── Helpers ────────────────────────────────────────────
