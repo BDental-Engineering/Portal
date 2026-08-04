@@ -1,9 +1,9 @@
+import crypto from 'crypto';
+
 console.log('TOKEN CHECK:', process.env.GITHUB_TOKEN ? 'SET (length ' + process.env.GITHUB_TOKEN.length + ')' : 'NOT SET');
 console.log('OWNER:', process.env.GITHUB_OWNER);
 console.log('REPO:', process.env.GITHUB_REPO);
 console.log('BRANCH:', process.env.GITHUB_BRANCH);
-
-import crypto from 'crypto';
 
 const GH_TOKEN  = process.env.GITHUB_TOKEN;
 const GH_OWNER  = process.env.GITHUB_OWNER;
