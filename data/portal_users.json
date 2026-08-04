@@ -1,10 +1,12 @@
-[{
-  "id": "admin-001",
-  "name": "Admin",
-  "email": "sales@bdentalengineering.co.uk",
-  "passwordHash": "6d6c7c7fc1a8e547572757dbe0b090601347e2dbff390ede99ab4bea7e299511",
-  "role": "admin",
-  "customerId": null,
-  "active": true,
-  "createdAt": "2026-08-04T00:00:00.000Z"
-}]
+[
+  {
+    "id": "admin-001",
+    "name": "Admin",
+    "email": "sales@bdentalengineering.co.uk",
+    "passwordHash": "6d6c7c7fc1a8e547572757dbe0b090601347e2dbff390ede99ab4bea7e299511",
+    "role": "admin",
+    "customerId": null,
+    "active": true,
+    "createdAt": "2026-08-04T16:25:56.238Z"
+  }
+]
