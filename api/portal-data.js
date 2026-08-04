@@ -38,76 +38,51 @@ export default async function handler(req, res) {
       ? 'asset.json'
       : 'asset.json?%24filter=company_uuid%20eq%20' + companyUuid;
 
-    // Fetch all three in parallel
-    const [assets, assetTypes, assetTypeFields] = await Promise.all([
+    const [assets, assetTypes] = await Promise.all([
       sm8Get(assetEndpoint),
-      sm8Get('assettype.json'),
-      sm8Get('assettypefield.json')
+      sm8Get('assettype.json')
     ]);
 
     if (!assets) return res.status(500).json({ error: 'Failed to load assets' });
 
-    // Build lookup maps
+    // Build type name lookup
     const typeMap = {};
     if (assetTypes) {
-      assetTypes.forEach(t => {
-        typeMap[t.uuid] = t.name;
-      });
+      assetTypes.forEach(t => { typeMap[t.uuid] = t.name; });
     }
 
-    // Build field map: asset_type_uuid -> array of field definitions
-    const fieldMap = {};
-    if (assetTypeFields) {
-      assetTypeFields.forEach(f => {
-        if (!fieldMap[f.asset_type_uuid]) fieldMap[f.asset_type_uuid] = [];
-        fieldMap[f.asset_type_uuid].push(f);
+    // Enrich each asset — field_data is an array with fieldName/fieldValue
+    const enriched = assets.map(a => {
+      const typeName = typeMap[a.asset_type_uuid] || null;
+      const fieldArray = Array.isArray(a.field_data) ? a.field_data : [];
+
+      // Build a name->value map for easy lookup
+      const byName = {};
+      fieldArray.forEach(f => {
+        byName[f.fieldName] = f.fieldValue;
       });
-      // Sort each type's fields by sort_order
-      Object.keys(fieldMap).forEach(k => {
-        fieldMap[k].sort((a, b) => (a.sort_order || 0) - (b.sort_order || 0));
-      });
-    }
 
-    // Enrich each asset
-const enriched = assets.map(a => {
-  const typeName = typeMap[a.asset_type_uuid] || null;
-  const fields = fieldMap[a.asset_type_uuid] || [];
-
-  // field_data can be an object or array depending on SM8 response
-  const rawFieldData = a.field_data || {};
-  let fieldData = {};
-
-  if (Array.isArray(rawFieldData)) {
-    // Array format: [{ field_uuid: '...', value: '...' }]
-    rawFieldData.forEach(f => {
-      fieldData[f.field_uuid] = f.value;
+      return {
+        uuid: a.uuid,
+        name: a.name || 'Unnamed Asset',
+        active: a.active,
+        asset_type_name: typeName,
+        make: byName['Make'] || null,
+        model: byName['Model'] || null,
+        serial: byName['Serial Number'] || null,
+        location: byName['Location'] || null,
+        service_due: byName['Service Due'] || null,
+        // All fields for full display, sorted by sortOrder
+        fields: fieldArray
+          .slice()
+          .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+          .map(f => ({ name: f.fieldName, value: f.fieldValue }))
+      };
     });
-  } else {
-    // Object format: { 'uuid': 'value' }
-    fieldData = rawFieldData;
+
+    console.log('Assets returned:', enriched.length);
+    return res.status(200).json({ assets: enriched });
   }
 
-  let make = null, model = null, serial = null;
-  fields.forEach(f => {
-    const val = fieldData[f.uuid] || null;
-    const name = (f.name || '').trim();
-    if (name === 'Make') make = val;
-    if (name === 'Model') model = val;
-    if (name === 'Serial Number') serial = val;
-  });
-
-  return {
-    uuid: a.uuid,
-    name: a.name || 'Unnamed Asset',
-    active: a.active,
-    asset_type_name: typeName,
-    make,
-    model,
-    serial,
-    fields: fields.map(f => ({
-      name: f.name,
-      value: fieldData[f.uuid] || null
-    }))
-  };
-});
-
+  return res.status(400).json({ error: 'Unknown resource' });
+}
