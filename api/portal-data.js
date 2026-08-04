@@ -69,42 +69,45 @@ export default async function handler(req, res) {
     }
 
     // Enrich each asset
-    const enriched = assets.map(a => {
-      const typeName = typeMap[a.asset_type_uuid] || null;
-      const fields = fieldMap[a.asset_type_uuid] || [];
+const enriched = assets.map(a => {
+  const typeName = typeMap[a.asset_type_uuid] || null;
+  const fields = fieldMap[a.asset_type_uuid] || [];
 
-      // Parse asset field values — stored in asset.field_data as object keyed by field uuid
-      const fieldData = a.field_data || {};
+  // field_data can be an object or array depending on SM8 response
+  const rawFieldData = a.field_data || {};
+  let fieldData = {};
 
-      // Find make, model, serial by matching field names (case-insensitive)
-      let make = null, model = null, serial = null;
-      fields.forEach(f => {
-        const val = fieldData[f.uuid] || null;
-        const nameLower = (f.name || '').toLowerCase();
-        if (!make && nameLower.includes('make')) make = val;
-        if (!model && nameLower.includes('model')) model = val;
-        if (!serial && (nameLower.includes('serial') || nameLower.includes('s/n'))) serial = val;
-      });
-
-      return {
-        uuid: a.uuid,
-        name: a.name || 'Unnamed Asset',
-        active: a.active,
-        asset_type_name: typeName,
-        make,
-        model,
-        serial,
-        // Pass through all fields for full display
-        fields: fields.map(f => ({
-          name: f.name,
-          value: fieldData[f.uuid] || null
-        }))
-      };
+  if (Array.isArray(rawFieldData)) {
+    // Array format: [{ field_uuid: '...', value: '...' }]
+    rawFieldData.forEach(f => {
+      fieldData[f.field_uuid] = f.value;
     });
-
-    console.log('Assets returned:', enriched.length);
-    return res.status(200).json({ assets: enriched });
+  } else {
+    // Object format: { 'uuid': 'value' }
+    fieldData = rawFieldData;
   }
 
-  return res.status(400).json({ error: 'Unknown resource' });
-}
+  let make = null, model = null, serial = null;
+  fields.forEach(f => {
+    const val = fieldData[f.uuid] || null;
+    const name = (f.name || '').trim();
+    if (name === 'Make') make = val;
+    if (name === 'Model') model = val;
+    if (name === 'Serial Number') serial = val;
+  });
+
+  return {
+    uuid: a.uuid,
+    name: a.name || 'Unnamed Asset',
+    active: a.active,
+    asset_type_name: typeName,
+    make,
+    model,
+    serial,
+    fields: fields.map(f => ({
+      name: f.name,
+      value: fieldData[f.uuid] || null
+    }))
+  };
+});
+
