@@ -1,8 +1,8 @@
 [{
   "id": "admin-001",
   "name": "Admin",
-  "email": "admin@yourcompany.com",
-  "passwordHash": "<6d6c7c7fc1a8e547572757dbe0b090601347e2dbff390ede99ab4bea7e299511>",
+  "email": "sales@bdentalengineering.co.uk",
+  "passwordHash": "6d6c7c7fc1a8e547572757dbe0b090601347e2dbff390ede99ab4bea7e299511",
   "role": "admin",
   "customerId": null,
   "active": true,
