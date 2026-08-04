@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Portal — Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f172a;
+      font-family: system-ui, sans-serif;
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+    header {
+      background: #1e293b;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #334155;
+    }
+    header h1 { font-size: 18px; font-weight: 700; }
+    .user-info { display: flex; align-items: center; gap: 16px; }
+    .user-info span { color: #94a3b8; font-size: 14px; }
+    .logout {
+      background: #334155;
+      border: none;
+      color: #f1f5f9;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .logout:hover { background: #475569; }
+    main { padding: 32px; max-width: 1100px; margin: 0 auto; }
+    h2 { font-size: 20px; margin-bottom: 20px; color: #e2e8f0; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid #334155;
+    }
+    .card h3 { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: #e2e8f0; }
+    .card p { font-size: 13px; color: #94a3b8; margin-bottom: 6px; }
+    .card p span { color: #f1f5f9; }
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .badge.active { background: #14532d; color: #86efac; }
+    .badge.inactive { background: #450a0a; color: #fca5a5; }
+    .loading { color: #94a3b8; text-align: center; padding: 60px; }
+    .empty { color: #94a3b8; text-align: center; padding: 60px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Customer Portal</h1>
+    <div class="user-info">
+      <span id="userName"></span>
+      <button class="logout" id="logoutBtn">Sign Out</button>
+    </div>
+  </header>
+
+  <main>
+    <h2>Your Assets</h2>
+    <div class="grid" id="assetGrid">
+      <p class="loading">Loading assets...</p>
+    </div>
+  </main>
+
+  <script>
+    async function init() {
+      // Check session
+      const authRes = await fetch('/api/portal-auth');
+      if (!authRes.ok) {
+        window.location.href = '/login.html';
+        return;
+      }
+      const session = await authRes.json();
+      document.getElementById('userName').textContent = session.name || session.userId;
+
+      // Load assets
+      const dataRes = await fetch('/api/portal-data?resource=assets');
+      const grid = document.getElementById('assetGrid');
+
+      if (!dataRes.ok) {
+        grid.innerHTML = '<p class="empty">Failed to load assets.</p>';
+        return;
+      }
+
+      const { assets } = await dataRes.json();
+
+      if (!assets.length) {
+        grid.innerHTML = '<p class="empty">No assets found for your account.</p>';
+        return;
+      }
+
+      grid.innerHTML = assets.map(a => {
+        const active = a.active === 1 || a.active === '1';
+        return '<div class="card">' +
+          '<h3>' + (a.name || 'Unnamed Asset') + '</h3>' +
+          '<p>Type: <span>' + (a.asset_type_name || '—') + '</span></p>' +
+          '<p>Serial: <span>' + (a.serial_number || '—') + '</span>' + '</p>' +
+          '<p>Location: <span>' + (a.site_name || '—') + '</span></p>' +
+          '<span class="badge ' + (active ? 'active' : 'inactive') + '">' + (active ? 'Active' : 'Inactive') + '</span>' +
+          '</div>';
+      }).join('');
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async function() {
+      await fetch('/api/portal-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'logout' })
+      });
+      window.location.href = '/login.html';
+    });
+
+    init();
+  </script>
+</body>
+</html>
