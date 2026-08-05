@@ -55,6 +55,7 @@ export default async function handler(req, res) {
     const enriched = assets.map(a => {
       const typeName = typeMap[a.asset_type_uuid] || null;
       const fieldArray = Array.isArray(a.field_data) ? a.field_data : [];
+      console.log('First asset field_data:', JSON.stringify(a.field_data));
 
       // Build a name->value map for easy lookup
       const byName = {};
