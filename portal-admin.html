@@ -439,20 +439,29 @@ function renderCustomers() {
 function renderAssets() {
   const q = document.getElementById('assetSearch').value.toLowerCase();
   const cf = document.getElementById('assetCustFilter').value;
-  const rows = assets.filter(a=>(!cf||a.company_uuid===cf)&&(!q||a.name.toLowerCase().includes(q)||a.make?.toLowerCase().includes(q)||a.model?.toLowerCase().includes(q)));
+  const rows = assets.filter(a =>
+    (!cf || a.company_uuid === cf) &&
+    (!q || a.name.toLowerCase().includes(q) ||
+     a.make?.toLowerCase().includes(q) ||
+     a.model?.toLowerCase().includes(q))
+  );
   const tb = document.getElementById('assetTable');
-  if (!rows.length) { tb.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>No assets found</div></td></tr>`; return; }
-  tb.innerHTML = rows.map(a=>{
-    const active = a.active===1||a.active==='1';
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>No assets found</div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.map(a => {
+    const active = a.active === 1 || a.active === '1';
     return `<tr>
       <td><strong>${esc(a.name)}</strong></td>
-      <td style="color:var(--muted);font-size:.8rem">${esc(a.asset_type_name||'—')}</td>
-      <td>${esc(a.make||'—')} / \${esc(a.model||'—')}</td>
-      <td style="color:var(--muted);font-family:monospace;font-size:.8rem">${esc(a.serial||'—')}</td>
-      <td style="color:var(--muted);font-size:.8rem">${esc(a.location||'—')}</td>
-      <td style="color:var(--muted);font-size:.8rem">${esc(a.service_due||'—')}</td>
-      <td><span class="badge \${active?'badge-green':'badge-red'}">${active?'Active':'Inactive'}</span></td>
-    </tr>`;}).join('');
+      <td style="color:var(--muted);font-size:.8rem">${esc(a.asset_type_name || '—')}</td>
+      <td>${esc(a.make || '—')} / \${esc(a.model || '—')}</td>
+      <td style="color:var(--muted);font-family:monospace;font-size:.8rem">${esc(a.serial || '—')}</td>
+      <td style="color:var(--muted);font-size:.8rem">${esc(a.location || '—')}</td>
+      <td style="color:var(--muted);font-size:.8rem">${esc(a.service_due || '—')}</td>
+      <td><span class="badge \${active ? 'badge-green' : 'badge-red'}">${active ? 'Active' : 'Inactive'}</span></td>
+    </tr>`;
+  }).join('');
 }
 
 // ── RENDER DOCUMENTS ───────────────────────────────────
