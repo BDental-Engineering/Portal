@@ -87,6 +87,13 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .toast.success{border-left:3px solid var(--green)}
 .toast.error{border-left:3px solid var(--red)}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
+/* DEBUG PANEL */
+#debugPanel{background:#0a0e1a;border:1px solid #f59e0b;border-radius:10px;margin:1rem 2rem;padding:1rem;font-family:monospace;font-size:.75rem;color:#fcd34d;max-height:260px;overflow-y:auto}
+#debugPanel h4{color:#f59e0b;margin-bottom:.5rem;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+.dlog{padding:.15rem 0;border-bottom:1px solid rgba(245,158,11,.1)}
+.dlog.ok{color:#86efac}
+.dlog.err{color:#fca5a5}
+.dlog.info{color:#93c5fd}
 </style>
 </head>
 <body>
@@ -104,6 +111,12 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <button class="btn-signout" onclick="signOut()">Sign Out</button>
   </div>
 </nav>
+
+<!-- DEBUG PANEL -->
+<div id="debugPanel">
+  <h4>🔍 Debug Log — remove before production</h4>
+  <div id="debugLog"></div>
+</div>
 
 <div class="stats">
   <div class="stat-card"><div class="stat-label">Customers</div><div class="stat-val" id="statCustomers">—</div></div>
@@ -124,10 +137,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- CUSTOMERS PANEL -->
 <div class="panel active" id="panel-customers">
-  <div class="sm8-note">
-    ℹ️ Customers are read from <strong>ServiceM8</strong>. To add or edit customers, use your
-    <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.
-  </div>
+  <div class="sm8-note">ℹ️ Customers are read from <strong>ServiceM8</strong>. To add or edit customers, use your <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.</div>
   <div class="toolbar">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -135,19 +145,14 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
   </div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th>Status</th></tr></thead>
-      <tbody id="custTable"></tbody>
-    </table>
+    <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th>Status</th></tr></thead>
+    <tbody id="custTable"></tbody></table>
   </div>
 </div>
 
 <!-- ASSETS PANEL -->
 <div class="panel" id="panel-assets">
-  <div class="sm8-note">
-    ℹ️ Assets are read from <strong>ServiceM8</strong>. To add or edit assets, use your
-    <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.
-  </div>
+  <div class="sm8-note">ℹ️ Assets are read from <strong>ServiceM8</strong>. To add or edit assets, use your <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.</div>
   <div class="toolbar">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -156,10 +161,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <select class="filter" id="assetCustFilter" onchange="renderAssets()"><option value="">All Customers</option></select>
   </div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Name</th><th>Type</th><th>Make / Model</th><th>Serial</th><th>Location</th><th>Service Due</th><th>Status</th></tr></thead>
-      <tbody id="assetTable"></tbody>
-    </table>
+    <table><thead><tr><th>Name</th><th>Type</th><th>Make / Model</th><th>Serial</th><th>Location</th><th>Service Due</th><th>Status</th></tr></thead>
+    <tbody id="assetTable"></tbody></table>
   </div>
 </div>
 
@@ -177,19 +180,14 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </button>
   </div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Title</th><th>Type</th><th>Customer</th><th>Uploaded</th><th>Actions</th></tr></thead>
-      <tbody id="docTable"></tbody>
-    </table>
+    <table><thead><tr><th>Title</th><th>Type</th><th>Customer</th><th>Uploaded</th><th>Actions</th></tr></thead>
+    <tbody id="docTable"></tbody></table>
   </div>
 </div>
 
 <!-- MANUALS PANEL -->
 <div class="panel" id="panel-manuals">
-  <div class="sm8-note">
-    ℹ️ Manuals are read from <strong>ServiceM8 Knowledge Base</strong>. To add or edit manuals, use your
-    <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>. Tag articles with make and model for automatic matching.
-  </div>
+  <div class="sm8-note">ℹ️ Manuals are read from <strong>ServiceM8 Knowledge Base</strong>. Tag articles with make and model for automatic matching. <a href="https://app.servicem8.com" target="_blank">Open ServiceM8</a>.</div>
   <div class="toolbar">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -197,10 +195,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
   </div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Title</th><th>Type</th><th>Tags</th><th>Status</th></tr></thead>
-      <tbody id="manTable"></tbody>
-    </table>
+    <table><thead><tr><th>Title</th><th>Type</th><th>Tags</th><th>Status</th></tr></thead>
+    <tbody id="manTable"></tbody></table>
   </div>
 </div>
 
@@ -217,10 +213,8 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </button>
   </div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Customer</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
-      <tbody id="userTable"></tbody>
-    </table>
+    <table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Customer</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+    <tbody id="userTable"></tbody></table>
   </div>
 </div>
 
@@ -229,10 +223,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- Document Modal -->
 <div class="overlay" id="modal-document">
   <div class="modal">
-    <div class="modal-header">
-      <h3 id="docModalTitle">Add Document</h3>
-      <button class="modal-close" onclick="closeModal('document')">×</button>
-    </div>
+    <div class="modal-header"><h3 id="docModalTitle">Add Document</h3><button class="modal-close" onclick="closeModal('document')">×</button></div>
     <div class="modal-body">
       <input type="hidden" id="docId"/>
       <div class="field"><label>Title *</label><input type="text" id="docTitle" placeholder="Annual Service Report"/></div>
@@ -260,10 +251,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- User Modal -->
 <div class="overlay" id="modal-user">
   <div class="modal">
-    <div class="modal-header">
-      <h3 id="userModalTitle">Create Portal User</h3>
-      <button class="modal-close" onclick="closeModal('user')">×</button>
-    </div>
+    <div class="modal-header"><h3 id="userModalTitle">Create Portal User</h3><button class="modal-close" onclick="closeModal('user')">×</button></div>
     <div class="modal-body">
       <input type="hidden" id="userId"/>
       <div class="form-row">
@@ -279,17 +267,11 @@ tr:hover td{background:rgba(255,255,255,.02)}
         </div>
         <div class="field" id="uCustomerField"><label>Customer Account</label><select id="uCustomer"></select></div>
       </div>
-      <div class="field" id="uPwField"><label>Password *</label>
-        <input autocomplete="new-password" type="password" id="uPassword" placeholder="Min 8 characters"/>
-      </div>
-      <div class="field" id="uResetPwField" style="display:none">
-        <label>New Password (leave blank to keep current)</label>
-        <input autocomplete="new-password" type="password" id="uPasswordReset" placeholder="New password…"/>
-      </div>
-      <div class="field" id="uActiveField" style="display:none">
-        <label>Status</label>
-        <select id="uActive"><option value="true">Active</option><option value="false">Inactive</option></select>
-      </div>
+      <form autocomplete="off" style="display:contents">
+        <div class="field" id="uPwField"><label>Password *</label><input autocomplete="new-password" type="password" id="uPassword" placeholder="Min 8 characters"/></div>
+        <div class="field" id="uResetPwField" style="display:none"><label>New Password (leave blank to keep)</label><input autocomplete="new-password" type="password" id="uPasswordReset" placeholder="New password…"/></div>
+      </form>
+      <div class="field" id="uActiveField" style="display:none"><label>Status</label><select id="uActive"><option value="true">Active</option><option value="false">Inactive</option></select></div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal('user')">Cancel</button>
@@ -298,16 +280,11 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </div>
 
-<!-- Confirm Delete Modal -->
+<!-- Confirm Delete -->
 <div class="overlay" id="modal-confirm">
   <div class="modal" style="max-width:380px">
-    <div class="modal-header">
-      <h3>Confirm Delete</h3>
-      <button class="modal-close" onclick="closeModal('confirm')">×</button>
-    </div>
-    <div class="modal-body">
-      <p style="color:var(--muted);font-size:.9rem" id="confirmMsg">Are you sure?</p>
-    </div>
+    <div class="modal-header"><h3>Confirm Delete</h3><button class="modal-close" onclick="closeModal('confirm')">×</button></div>
+    <div class="modal-body"><p style="color:var(--muted);font-size:.9rem" id="confirmMsg">Are you sure?</p></div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal('confirm')">Cancel</button>
       <button class="btn-danger" onclick="confirmDeleteAction()">Delete</button>
@@ -316,66 +293,114 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </div>
 
 <script>
+// ── DEBUG ──────────────────────────────────────────────
+function dlog(msg, type='info') {
+  console.log('[DEBUG]', msg);
+  const el = document.createElement('div');
+  el.className = 'dlog ' + type;
+  el.textContent = new Date().toISOString().slice(11,23) + ' ' + msg;
+  document.getElementById('debugLog').prepend(el);
+}
+
 // ── STATE ──────────────────────────────────────────────
 let customers=[],assets=[],documents=[],manuals=[],users=[];
 let deleteCallback=null;
 
 // ── INIT ───────────────────────────────────────────────
 (async()=>{
-  const s=await api('/api/portal-auth');
-  if(!s.ok||s.data.role!=='admin'){location.href='portal-login.html';return;}
-  document.getElementById('adminName').textContent=s.data.name||'';
-  await Promise.all([loadCustomers(),loadAssets(),loadDocuments(),loadManuals(),loadUsers()]);
+  dlog('Page loaded, checking cookies: ' + document.cookie.split(';').map(c=>c.trim().split('=')[0]).join(', '), 'info');
+  dlog('Calling GET /api/portal-auth ...', 'info');
+
+  const authRes = await fetch('/api/portal-auth', {
+    method: 'GET',
+    credentials: 'include',
+    headers: { 'Accept': 'application/json' }
+  });
+
+  dlog('portal-auth status: ' + authRes.status, authRes.ok ? 'ok' : 'err');
+
+  if (!authRes.ok) {
+    const body = await authRes.text();
+    dlog('Auth failed body: ' + body, 'err');
+    dlog('Redirecting to login in 3s...', 'err');
+    setTimeout(() => location.href = 'portal-login.html', 3000);
+    return;
+  }
+
+  const session = await authRes.json();
+  dlog('Session: ' + JSON.stringify(session), 'ok');
+
+  if (session.role !== 'admin') {
+    dlog('Not admin, role=' + session.role, 'err');
+    setTimeout(() => location.href = 'portal-login.html', 3000);
+    return;
+  }
+
+  document.getElementById('adminName').textContent = session.name || '';
+
+  dlog('Loading all data in parallel...', 'info');
+  await Promise.all([loadCustomers(), loadAssets(), loadDocuments(), loadManuals(), loadUsers()]);
   updateStats();
+  dlog('All data loaded.', 'ok');
 })();
 
 // ── API HELPER ─────────────────────────────────────────
-async function api(url,method='GET',body){
-  const opts={method,headers:{'Content-Type':'application/json'},credentials:'include'};
-  if(body)opts.body=JSON.stringify(body);
-  const r=await fetch(url,opts);
-  const data=await r.json().catch(()=>({}));
-  return{ok:r.ok,data,status:r.status};
+async function api(url, method='GET', body) {
+  dlog(method + ' ' + url, 'info');
+  const opts = { method, credentials: 'include', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' } };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  const text = await r.text();
+  let data = {};
+  try { data = JSON.parse(text); } catch(e) { dlog('JSON parse error for ' + url + ': ' + text.slice(0,200), 'err'); }
+  dlog(method + ' ' + url + ' → ' + r.status + ' ' + (r.ok?'OK':'FAIL'), r.ok?'ok':'err');
+  if (!r.ok) dlog('Response body: ' + text.slice(0,300), 'err');
+  return { ok: r.ok, data, status: r.status };
 }
 
 // ── LOAD ───────────────────────────────────────────────
-async function loadCustomers(){
-  const r=await api('/api/portal-data?resource=customers');
-  if(r.ok)customers=r.data;
+async function loadCustomers() {
+  const r = await api('/api/portal-data?resource=customers');
+  if (r.ok) { customers = Array.isArray(r.data) ? r.data : []; dlog('Customers loaded: ' + customers.length, 'ok'); }
+  else dlog('Failed to load customers', 'err');
   renderCustomers();
   populateCustomerFilters();
 }
-async function loadAssets(){
-  const r=await api('/api/portal-data?resource=assets');
-  if(r.ok)assets=r.data.assets||[];
+async function loadAssets() {
+  const r = await api('/api/portal-data?resource=assets');
+  if (r.ok) { assets = r.data.assets || []; dlog('Assets loaded: ' + assets.length, 'ok'); }
+  else dlog('Failed to load assets', 'err');
   renderAssets();
 }
-async function loadDocuments(){
-  const r=await api('/api/portal-data?resource=documents');
-  if(r.ok)documents=r.data;
+async function loadDocuments() {
+  const r = await api('/api/portal-data?resource=documents');
+  if (r.ok) { documents = Array.isArray(r.data) ? r.data : []; dlog('Documents loaded: ' + documents.length, 'ok'); }
+  else dlog('Failed to load documents', 'err');
   renderDocuments();
 }
-async function loadManuals(){
-  const r=await api('/api/portal-data?resource=manuals');
-  if(r.ok)manuals=r.data;
+async function loadManuals() {
+  const r = await api('/api/portal-data?resource=manuals');
+  if (r.ok) { manuals = Array.isArray(r.data) ? r.data : []; dlog('Manuals loaded: ' + manuals.length, 'ok'); }
+  else dlog('Failed to load manuals', 'err');
   renderManuals();
 }
-async function loadUsers(){
-  const r=await api('/api/portal-users');
-  if(r.ok)users=r.data;
+async function loadUsers() {
+  const r = await api('/api/portal-users');
+  if (r.ok) { users = Array.isArray(r.data) ? r.data : []; dlog('Users loaded: ' + users.length, 'ok'); }
+  else dlog('Failed to load users', 'err');
   renderUsers();
 }
 
 // ── STATS ──────────────────────────────────────────────
-function updateStats(){
-  document.getElementById('statCustomers').textContent=customers.filter(c=>c.active).length;
-  document.getElementById('statAssets').textContent=assets.filter(a=>a.active===1||a.active==='1'||a.active===true).length;
-  document.getElementById('statDocs').textContent=documents.filter(d=>d.active).length;
-  document.getElementById('statManuals').textContent=manuals.filter(m=>m.active===1||m.active===true).length;
+function updateStats() {
+  document.getElementById('statCustomers').textContent = customers.filter(c=>c.active).length;
+  document.getElementById('statAssets').textContent = assets.filter(a=>a.active===1||a.active==='1'||a.active===true).length;
+  document.getElementById('statDocs').textContent = documents.filter(d=>d.active).length;
+  document.getElementById('statManuals').textContent = manuals.filter(m=>m.active===1||m.active===true).length;
 }
 
 // ── TABS ───────────────────────────────────────────────
-function switchTab(tab){
+function switchTab(tab) {
   document.querySelectorAll('.tab').forEach((t,i)=>{
     t.classList.toggle('active',['customers','assets','documents','manuals','users'][i]===tab);
   });
@@ -384,23 +409,23 @@ function switchTab(tab){
 }
 
 // ── CUSTOMER FILTERS ───────────────────────────────────
-function populateCustomerFilters(){
-  const opts=customers.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
-  document.getElementById('assetCustFilter').innerHTML='<option value="">All Customers</option>'+opts;
-  document.getElementById('docCustFilter').innerHTML='<option value="">All Customers</option>'+opts;
-  const dc=document.getElementById('docCustomer');
-  if(dc)dc.innerHTML='<option value="">— Select —</option>'+opts;
-  const uc=document.getElementById('uCustomer');
-  if(uc)uc.innerHTML=opts;
+function populateCustomerFilters() {
+  const opts = customers.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  document.getElementById('assetCustFilter').innerHTML = '<option value="">All Customers</option>' + opts;
+  document.getElementById('docCustFilter').innerHTML = '<option value="">All Customers</option>' + opts;
+  const dc = document.getElementById('docCustomer');
+  if (dc) dc.innerHTML = '<option value="">— Select —</option>' + opts;
+  const uc = document.getElementById('uCustomer');
+  if (uc) uc.innerHTML = opts;
 }
 
 // ── RENDER CUSTOMERS ───────────────────────────────────
-function renderCustomers(){
-  const q=document.getElementById('custSearch').value.toLowerCase();
-  const rows=customers.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email?.toLowerCase().includes(q));
-  const tb=document.getElementById('custTable');
-  if(!rows.length){tb.innerHTML=`<tr><td colspan="5"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No customers found</div></td></tr>`;return;}
-  tb.innerHTML=rows.map(c=>`
+function renderCustomers() {
+  const q = document.getElementById('custSearch').value.toLowerCase();
+  const rows = customers.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email?.toLowerCase().includes(q));
+  const tb = document.getElementById('custTable');
+  if (!rows.length) { tb.innerHTML=`<tr><td colspan="5"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No customers found</div></td></tr>`; return; }
+  tb.innerHTML = rows.map(c=>`
     <tr>
       <td><strong>${esc(c.name)}</strong></td>
       <td>${esc(c.email||'—')}</td>
@@ -411,19 +436,15 @@ function renderCustomers(){
 }
 
 // ── RENDER ASSETS ──────────────────────────────────────
-function renderAssets(){
-  const q=document.getElementById('assetSearch').value.toLowerCase();
-  const cf=document.getElementById('assetCustFilter').value;
-  // Assets from SM8 use company_uuid instead of customerId
-  let rows=assets.filter(a=>
-    (!cf||a.company_uuid===cf)&&
-    (!q||a.name.toLowerCase().includes(q)||a.make?.toLowerCase().includes(q)||a.model?.toLowerCase().includes(q))
-  );
-  const tb=document.getElementById('assetTable');
-  if(!rows.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>No assets found</div></td></tr>`;return;}
-  tb.innerHTML=rows.map(a=>{
-    const active=a.active===1||a.active==='1';
-    return`<tr>
+function renderAssets() {
+  const q = document.getElementById('assetSearch').value.toLowerCase();
+  const cf = document.getElementById('assetCustFilter').value;
+  const rows = assets.filter(a=>(!cf||a.company_uuid===cf)&&(!q||a.name.toLowerCase().includes(q)||a.make?.toLowerCase().includes(q)||a.model?.toLowerCase().includes(q)));
+  const tb = document.getElementById('assetTable');
+  if (!rows.length) { tb.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>No assets found</div></td></tr>`; return; }
+  tb.innerHTML = rows.map(a=>{
+    const active = a.active===1||a.active==='1';
+    return `<tr>
       <td><strong>${esc(a.name)}</strong></td>
       <td style="color:var(--muted);font-size:.8rem">${esc(a.asset_type_name||'—')}</td>
       <td>${esc(a.make||'—')} / \${esc(a.model||'—')}</td>
@@ -435,41 +456,39 @@ function renderAssets(){
 }
 
 // ── RENDER DOCUMENTS ───────────────────────────────────
-function renderDocuments(){
-  const q=document.getElementById('docSearch').value.toLowerCase();
-  const cf=document.getElementById('docCustFilter').value;
-  let rows=documents.filter(d=>(!cf||d.customerId===cf)&&(!q||d.title.toLowerCase().includes(q)));
-  const tb=document.getElementById('docTable');
-  if(!rows.length){tb.innerHTML=`<tr><td colspan="5"><div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>No documents found</div></td></tr>`;return;}
-  tb.innerHTML=rows.map(d=>{
-    const cust=customers.find(c=>c.id===d.customerId);
-    return`<tr>
+function renderDocuments() {
+  const q = document.getElementById('docSearch').value.toLowerCase();
+  const cf = document.getElementById('docCustFilter').value;
+  const rows = documents.filter(d=>(!cf||d.customerId===cf)&&(!q||d.title.toLowerCase().includes(q)));
+  const tb = document.getElementById('docTable');
+  if (!rows.length) { tb.innerHTML=`<tr><td colspan="5"><div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>No documents found</div></td></tr>`; return; }
+  tb.innerHTML = rows.map(d=>{
+    const cust = customers.find(c=>c.id===d.customerId);
+    return `<tr>
       <td><a href="${esc(d.fileUrl)}" target="_blank" style="color:var(--accent)">${esc(d.title)}</a></td>
       <td>${docTypeBadge(d.type)}</td>
       <td>${cust?esc(cust.name):'—'}</td>
       <td style="color:var(--muted)">${fmtDate(d.uploadedAt)}</td>
-      <td><div class="actions">
-        <button class="btn-icon danger" onclick="deleteItem('document','${d.id}','${esc(d.title)}')">🗑</button>
-      </div></td>
+      <td><div class="actions"><button class="btn-icon danger" onclick="deleteItem('document','${d.id}','${esc(d.title)}')">🗑</button></div></td>
     </tr>`;}).join('');
 }
 
-function docTypeBadge(t){
+function docTypeBadge(t) {
   const map={Warranty:'badge-green',Invoice:'badge-amber',Certificate:'badge-green',Report:'badge-blue',Other:'badge-muted'};
-  return`<span class="badge \${map[t]||'badge-muted'}">${t||'Other'}</span>`;
+  return `<span class="badge \${map[t]||'badge-muted'}">${t||'Other'}</span>`;
 }
 
 // ── RENDER MANUALS ─────────────────────────────────────
-function renderManuals(){
-  const q=document.getElementById('manSearch').value.toLowerCase();
-  let rows=manuals.filter(m=>!q||m.title.toLowerCase().includes(q)||m.tags?.some(t=>t.toLowerCase().includes(q)));
-  const tb=document.getElementById('manTable');
-  if(!rows.length){tb.innerHTML=`<tr><td colspan="4"><div class="empty"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>No manuals found</div></td></tr>`;return;}
-  tb.innerHTML=rows.map(m=>{
-    const active=m.active===1||m.active===true;
-    const typeBadge={video:'badge-blue',pdf:'badge-amber',richtext:'badge-muted',call:'badge-green'};
-    const tags=Array.isArray(m.tags)&&m.tags.length?m.tags.map(t=>`<span class="badge badge-muted" style="margin-right:3px">${esc(t)}</span>`).join(''):'—';
-    return`<tr>
+function renderManuals() {
+  const q = document.getElementById('manSearch').value.toLowerCase();
+  const rows = manuals.filter(m=>!q||m.title.toLowerCase().includes(q)||m.tags?.some(t=>t.toLowerCase().includes(q)));
+  const tb = document.getElementById('manTable');
+  if (!rows.length) { tb.innerHTML=`<tr><td colspan="4"><div class="empty"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>No manuals found</div></td></tr>`; return; }
+  tb.innerHTML = rows.map(m=>{
+    const active = m.active===1||m.active===true;
+    const typeBadge = {video:'badge-blue',pdf:'badge-amber',richtext:'badge-muted',call:'badge-green'};
+    const tags = Array.isArray(m.tags)&&m.tags.length ? m.tags.map(t=>`<span class="badge badge-muted" style="margin-right:3px">${esc(t)}</span>`).join('') : '—';
+    return `<tr>
       <td><strong>${esc(m.title)}</strong></td>
       <td><span class="badge \${typeBadge[m.article_type]||'badge-muted'}">${m.article_type||'richtext'}</span></td>
       <td>${tags}</td>
@@ -478,14 +497,14 @@ function renderManuals(){
 }
 
 // ── RENDER USERS ───────────────────────────────────────
-function renderUsers(){
-  const q=document.getElementById('userSearch').value.toLowerCase();
-  let rows=users.filter(u=>!q||u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q));
-  const tb=document.getElementById('userTable');
-  if(!rows.length){tb.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No users found</div></td></tr>`;return;}
-  tb.innerHTML=rows.map(u=>{
-    const cust=customers.find(c=>c.id===u.customerId);
-    return`<tr>
+function renderUsers() {
+  const q = document.getElementById('userSearch').value.toLowerCase();
+  const rows = users.filter(u=>!q||u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q));
+  const tb = document.getElementById('userTable');
+  if (!rows.length) { tb.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No users found</div></td></tr>`; return; }
+  tb.innerHTML = rows.map(u=>{
+    const cust = customers.find(c=>c.id===u.customerId);
+    return `<tr>
       <td><strong>${esc(u.name)}</strong></td>
       <td>${esc(u.email)}</td>
       <td><span class="badge \${u.role==='admin'?'badge-blue':'badge-muted'}">${u.role}</span></td>
@@ -500,26 +519,26 @@ function renderUsers(){
 }
 
 // ── MODALS ─────────────────────────────────────────────
-function openModal(type){document.getElementById('modal-'+type).classList.add('open');}
-function closeModal(type){document.getElementById('modal-'+type).classList.remove('open');}
+function openModal(type) { document.getElementById('modal-'+type).classList.add('open'); }
+function closeModal(type) { document.getElementById('modal-'+type).classList.remove('open'); }
 
 // ── DOCUMENT MODAL ─────────────────────────────────────
 document.getElementById('modal-document').addEventListener('click',e=>{if(e.target===document.getElementById('modal-document'))closeModal('document');});
 
-async function saveDocument(){
-  const id=document.getElementById('docId').value;
-  const body={
-    customerId:document.getElementById('docCustomer').value,
-    title:document.getElementById('docTitle').value.trim(),
-    type:document.getElementById('docType').value,
-    fileUrl:document.getElementById('docUrl').value.trim(),
-    active:true
+async function saveDocument() {
+  const id = document.getElementById('docId').value;
+  const body = {
+    customerId: document.getElementById('docCustomer').value,
+    title: document.getElementById('docTitle').value.trim(),
+    type: document.getElementById('docType').value,
+    fileUrl: document.getElementById('docUrl').value.trim(),
+    active: true
   };
-  if(!body.title||!body.customerId||!body.fileUrl){toast('Title, customer and URL are required','error');return;}
-  const r=id
-    ?await api('/api/portal-data?resource=documents','PUT',{id,...body})
-    :await api('/api/portal-data?resource=documents','POST',body);
-  if(r.ok){
+  if (!body.title||!body.customerId||!body.fileUrl) { toast('Title, customer and URL are required','error'); return; }
+  const r = id
+    ? await api('/api/portal-data?resource=documents','PUT',{id,...body})
+    : await api('/api/portal-data?resource=documents','POST',body);
+  if (r.ok) {
     toast('Document saved','success');
     closeModal('document');
     document.getElementById('docId').value='';
@@ -527,50 +546,48 @@ async function saveDocument(){
     document.getElementById('docUrl').value='';
     await loadDocuments();
     updateStats();
-  }else toast(r.data.error||'Error saving document','error');
+  } else toast(r.data.error||'Error saving document','error');
 }
 
 // ── USER MODAL ─────────────────────────────────────────
-function toggleUserCustomer(){
-  const role=document.getElementById('uRole').value;
-  document.getElementById('uCustomerField').style.display=role==='admin'?'none':'block';
+function toggleUserCustomer() {
+  document.getElementById('uCustomerField').style.display = document.getElementById('uRole').value==='admin'?'none':'block';
 }
-
-function editUser(id){
-  const u=users.find(x=>x.id===id);if(!u)return;
-  document.getElementById('userModalTitle').textContent='Edit User';
-  document.getElementById('userId').value=u.id;
-  document.getElementById('uName').value=u.name||'';
-  document.getElementById('uEmail').value=u.email||'';
-  document.getElementById('uRole').value=u.role||'customer';
-  document.getElementById('uCustomer').value=u.customerId||'';
-  document.getElementById('uActive').value=String(u.active);
-  document.getElementById('uPwField').style.display='none';
-  document.getElementById('uResetPwField').style.display='block';
-  document.getElementById('uActiveField').style.display='block';
-  document.getElementById('userSaveBtn').textContent='Update User';
+function editUser(id) {
+  const u = users.find(x=>x.id===id); if (!u) return;
+  document.getElementById('userModalTitle').textContent = 'Edit User';
+  document.getElementById('userId').value = u.id;
+  document.getElementById('uName').value = u.name||'';
+  document.getElementById('uEmail').value = u.email||'';
+  document.getElementById('uRole').value = u.role||'customer';
+  document.getElementById('uCustomer').value = u.customerId||'';
+  document.getElementById('uActive').value = String(u.active);
+  document.getElementById('uPwField').style.display = 'none';
+  document.getElementById('uResetPwField').style.display = 'block';
+  document.getElementById('uActiveField').style.display = 'block';
+  document.getElementById('userSaveBtn').textContent = 'Update User';
   toggleUserCustomer();
   openModal('user');
 }
 document.getElementById('modal-user').addEventListener('click',e=>{if(e.target===document.getElementById('modal-user'))closeModal('user');});
 
-async function saveUser(){
-  const id=document.getElementById('userId').value;
-  const pw=id?document.getElementById('uPasswordReset').value:document.getElementById('uPassword').value;
-  const body={
-    name:document.getElementById('uName').value.trim(),
-    email:document.getElementById('uEmail').value.trim(),
-    role:document.getElementById('uRole').value,
-    customerId:document.getElementById('uCustomer').value||null,
-    active:id?document.getElementById('uActive').value==='true':true
+async function saveUser() {
+  const id = document.getElementById('userId').value;
+  const pw = id ? document.getElementById('uPasswordReset').value : document.getElementById('uPassword').value;
+  const body = {
+    name: document.getElementById('uName').value.trim(),
+    email: document.getElementById('uEmail').value.trim(),
+    role: document.getElementById('uRole').value,
+    customerId: document.getElementById('uCustomer').value||null,
+    active: id ? document.getElementById('uActive').value==='true' : true
   };
-  if(pw)body.password=pw;
-  if(!body.name||!body.email){toast('Name and email are required','error');return;}
-  if(!id&&!pw){toast('Password is required for new users','error');return;}
-  const r=id
-    ?await api('/api/portal-users','PUT',{id,...body})
-    :await api('/api/portal-users','POST',body);
-  if(r.ok){
+  if (pw) body.password = pw;
+  if (!body.name||!body.email) { toast('Name and email are required','error'); return; }
+  if (!id&&!pw) { toast('Password is required for new users','error'); return; }
+  const r = id
+    ? await api('/api/portal-users','PUT',{id,...body})
+    : await api('/api/portal-users','POST',body);
+  if (r.ok) {
     toast(id?'User updated':'User created','success');
     closeModal('user');
     document.getElementById('userId').value='';
@@ -580,33 +597,34 @@ async function saveUser(){
     document.getElementById('uActiveField').style.display='none';
     document.getElementById('userSaveBtn').textContent='Create User';
     await loadUsers();
-  }else toast(r.data.error||'Error saving user','error');
+  } else toast(r.data.error||'Error saving user','error');
 }
 
-async function toggleUserActive(id,active){
-  const r=await api('/api/portal-users','PUT',{id,active});
-  if(r.ok){toast(active?'User activated':'User deactivated','success');await loadUsers();}
+async function toggleUserActive(id, active) {
+  const r = await api('/api/portal-users','PUT',{id,active});
+  if (r.ok) { toast(active?'User activated':'User deactivated','success'); await loadUsers(); }
   else toast('Error updating user','error');
 }
 
 // ── DELETE ─────────────────────────────────────────────
-function deleteItem(type,id,name){
-  document.getElementById('confirmMsg').textContent=`Delete "${name}"? This cannot be undone.`;
-  deleteCallback=async()=>{
-    const r=await api('/api/portal-data?resource='+type+'s','DELETE',{id});
-    if(r.ok){
-      toast(`${type.charAt(0).toUpperCase()+type.slice(1)} deleted`,'success');
+function deleteItem(type, id, name) {
+  document.getElementById('confirmMsg').textContent = `Delete "${name}"? This cannot be undone.`;
+  deleteCallback = async () => {
+    const r = await api('/api/portal-data?resource=documents','DELETE',{id});
+    if (r.ok) {
+      toast('Document deleted','success');
       closeModal('confirm');
-      if(type==='document'){await loadDocuments();updateStats();}
-    }else toast(r.data.error||'Delete failed','error');
+      await loadDocuments();
+      updateStats();
+    } else toast(r.data.error||'Delete failed','error');
   };
   openModal('confirm');
 }
-function confirmDeleteAction(){if(deleteCallback)deleteCallback();}
+function confirmDeleteAction() { if (deleteCallback) deleteCallback(); }
 document.getElementById('modal-confirm').addEventListener('click',e=>{if(e.target===document.getElementById('modal-confirm'))closeModal('confirm');});
 
 // ── SIGN OUT ───────────────────────────────────────────
-async function signOut(){
+async function signOut() {
   await api('/api/portal-auth','POST',{action:'logout'});
   location.href='portal-login.html';
 }
