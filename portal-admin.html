@@ -21,7 +21,7 @@ nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2r
 .stat-label{font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem}
 .stat-val{font-size:2rem;font-weight:800;color:var(--text)}
 .tabs-wrap{padding:1.5rem 2rem 0}
-.tabs{display:flex;gap:.25rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.3rem;width:fit-content}
+.tabs{display:flex;gap:.25rem;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.3rem;width:fit-content;flex-wrap:wrap}
 .tab{padding:.5rem 1.25rem;border-radius:7px;cursor:pointer;font-size:.875rem;font-weight:600;color:var(--muted);border:none;background:transparent;transition:all .2s}
 .tab.active{background:var(--accent);color:#fff}
 .tab:hover:not(.active){color:var(--text)}
@@ -36,27 +36,23 @@ select.filter{background:var(--surface2);border:1px solid var(--border);border-r
 select.filter:focus{border-color:var(--accent)}
 .btn-primary{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:.6rem 1.25rem;font-size:.875rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:.4rem;white-space:nowrap}
 .btn-primary:hover{opacity:.88}
-.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-table{width:100%;border-collapse:collapse}
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
 thead{background:var(--surface2)}
-th{padding:.85rem 1rem;text-align:left;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
+th{padding:.85rem 1rem;text-align:left;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap}
 td{padding:.85rem 1rem;font-size:.875rem;border-bottom:1px solid var(--border);vertical-align:middle}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:rgba(255,255,255,.02)}
 .actions{display:flex;gap:.5rem}
-.btn-icon{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.35rem .6rem;cursor:pointer;color:var(--muted);font-size:.8rem;transition:all .2s}
+.btn-icon{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:.35rem .6rem;cursor:pointer;color:var(--muted);font-size:.8rem;transition:all .2s;white-space:nowrap}
 .btn-icon:hover{border-color:var(--accent);color:var(--accent)}
 .btn-icon.danger:hover{border-color:var(--red);color:var(--red)}
-.badge{display:inline-block;border-radius:20px;padding:.2rem .65rem;font-size:.72rem;font-weight:700;letter-spacing:.04em}
+.badge{display:inline-block;border-radius:20px;padding:.2rem .65rem;font-size:.72rem;font-weight:700;letter-spacing:.04em;white-space:nowrap}
 .badge-green{background:rgba(34,197,94,.15);color:var(--green)}
 .badge-red{background:rgba(239,68,68,.15);color:var(--red)}
 .badge-amber{background:rgba(245,158,11,.15);color:var(--amber)}
 .badge-blue{background:rgba(79,110,247,.15);color:var(--accent)}
 .badge-muted{background:rgba(136,146,176,.12);color:var(--muted)}
-.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:.5rem}
-.dot-green{background:var(--green)}
-.dot-amber{background:var(--amber)}
-.dot-red{background:var(--red)}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
 .overlay.open{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);width:100%;max-width:520px;max-height:90vh;overflow-y:auto}
@@ -87,7 +83,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .toast.success{border-left:3px solid var(--green)}
 .toast.error{border-left:3px solid var(--red)}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
-/* DEBUG PANEL */
 #debugPanel{background:#0a0e1a;border:1px solid #f59e0b;border-radius:10px;margin:1rem 2rem;padding:1rem;font-family:monospace;font-size:.75rem;color:#fcd34d;max-height:260px;overflow-y:auto}
 #debugPanel h4{color:#f59e0b;margin-bottom:.5rem;font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
 .dlog{padding:.15rem 0;border-bottom:1px solid rgba(245,158,11,.1)}
@@ -112,7 +107,6 @@ tr:hover td{background:rgba(255,255,255,.02)}
   </div>
 </nav>
 
-<!-- DEBUG PANEL -->
 <div id="debugPanel">
   <h4>🔍 Debug Log — remove before production</h4>
   <div id="debugLog"></div>
@@ -137,7 +131,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- CUSTOMERS PANEL -->
 <div class="panel active" id="panel-customers">
-  <div class="sm8-note">ℹ️ Customers are read from <strong>ServiceM8</strong>. To add or edit customers, use your <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.</div>
+  <div class="sm8-note">ℹ️ Customers are read from <strong>ServiceM8</strong>. To add or edit, use your <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.</div>
   <div class="toolbar">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -145,14 +139,16 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
   </div>
   <div class="table-wrap">
-    <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th>Status</th></tr></thead>
-    <tbody id="custTable"></tbody></table>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Address</th><th>Status</th></tr></thead>
+      <tbody id="custTable"></tbody>
+    </table>
   </div>
 </div>
 
 <!-- ASSETS PANEL -->
 <div class="panel" id="panel-assets">
-  <div class="sm8-note">ℹ️ Assets are read from <strong>ServiceM8</strong>. To add or edit assets, use your <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.</div>
+  <div class="sm8-note">ℹ️ Assets are read from <strong>ServiceM8</strong>. To add or edit, use your <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.</div>
   <div class="toolbar">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -161,8 +157,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <select class="filter" id="assetCustFilter" onchange="renderAssets()"><option value="">All Customers</option></select>
   </div>
   <div class="table-wrap">
-    <table><thead><tr><th>Name</th><th>Type</th><th>Make / Model</th><th>Serial</th><th>Location</th><th>Service Due</th><th>Status</th></tr></thead>
-    <tbody id="assetTable"></tbody></table>
+    <table>
+      <thead><tr><th>Name</th><th>Type</th><th>Make / Model</th><th>Serial</th><th>Location</th><th>Service Due</th><th>Status</th></tr></thead>
+      <tbody id="assetTable"></tbody>
+    </table>
   </div>
 </div>
 
@@ -180,14 +178,16 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </button>
   </div>
   <div class="table-wrap">
-    <table><thead><tr><th>Title</th><th>Type</th><th>Customer</th><th>Uploaded</th><th>Actions</th></tr></thead>
-    <tbody id="docTable"></tbody></table>
+    <table>
+      <thead><tr><th>Title</th><th>Type</th><th>Customer</th><th>Uploaded</th><th>Actions</th></tr></thead>
+      <tbody id="docTable"></tbody>
+    </table>
   </div>
 </div>
 
 <!-- MANUALS PANEL -->
 <div class="panel" id="panel-manuals">
-  <div class="sm8-note">ℹ️ Manuals are read from <strong>ServiceM8 Knowledge Base</strong>. Tag articles with make and model for automatic matching. <a href="https://app.servicem8.com" target="_blank">Open ServiceM8</a>.</div>
+  <div class="sm8-note">ℹ️ Manuals are read from <strong>ServiceM8 Knowledge Base</strong>. Tag articles with make/model for matching. <a href="https://app.servicem8.com" target="_blank">Open ServiceM8</a>.</div>
   <div class="toolbar">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -195,8 +195,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </div>
   </div>
   <div class="table-wrap">
-    <table><thead><tr><th>Title</th><th>Type</th><th>Tags</th><th>Status</th></tr></thead>
-    <tbody id="manTable"></tbody></table>
+    <table>
+      <thead><tr><th>Title</th><th>Type</th><th>Tags</th><th>Status</th></tr></thead>
+      <tbody id="manTable"></tbody>
+    </table>
   </div>
 </div>
 
@@ -213,8 +215,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
     </button>
   </div>
   <div class="table-wrap">
-    <table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Customer</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
-    <tbody id="userTable"></tbody></table>
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Customer</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody id="userTable"></tbody>
+    </table>
   </div>
 </div>
 
@@ -223,7 +227,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- Document Modal -->
 <div class="overlay" id="modal-document">
   <div class="modal">
-    <div class="modal-header"><h3 id="docModalTitle">Add Document</h3><button class="modal-close" onclick="closeModal('document')">×</button></div>
+    <div class="modal-header">
+      <h3 id="docModalTitle">Add Document</h3>
+      <button class="modal-close" onclick="closeModal('document')">×</button>
+    </div>
     <div class="modal-body">
       <input type="hidden" id="docId"/>
       <div class="field"><label>Title *</label><input type="text" id="docTitle" placeholder="Annual Service Report"/></div>
@@ -251,7 +258,10 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- User Modal -->
 <div class="overlay" id="modal-user">
   <div class="modal">
-    <div class="modal-header"><h3 id="userModalTitle">Create Portal User</h3><button class="modal-close" onclick="closeModal('user')">×</button></div>
+    <div class="modal-header">
+      <h3 id="userModalTitle">Create Portal User</h3>
+      <button class="modal-close" onclick="closeModal('user')">×</button>
+    </div>
     <div class="modal-body">
       <input type="hidden" id="userId"/>
       <div class="form-row">
@@ -268,10 +278,19 @@ tr:hover td{background:rgba(255,255,255,.02)}
         <div class="field" id="uCustomerField"><label>Customer Account</label><select id="uCustomer"></select></div>
       </div>
       <form autocomplete="off" style="display:contents">
-        <div class="field" id="uPwField"><label>Password *</label><input autocomplete="new-password" type="password" id="uPassword" placeholder="Min 8 characters"/></div>
-        <div class="field" id="uResetPwField" style="display:none"><label>New Password (leave blank to keep)</label><input autocomplete="new-password" type="password" id="uPasswordReset" placeholder="New password…"/></div>
+        <div class="field" id="uPwField">
+          <label>Password *</label>
+          <input autocomplete="new-password" type="password" id="uPassword" placeholder="Min 8 characters"/>
+        </div>
+        <div class="field" id="uResetPwField" style="display:none">
+          <label>New Password (leave blank to keep)</label>
+          <input autocomplete="new-password" type="password" id="uPasswordReset" placeholder="New password…"/>
+        </div>
       </form>
-      <div class="field" id="uActiveField" style="display:none"><label>Status</label><select id="uActive"><option value="true">Active</option><option value="false">Inactive</option></select></div>
+      <div class="field" id="uActiveField" style="display:none">
+        <label>Status</label>
+        <select id="uActive"><option value="true">Active</option><option value="false">Inactive</option></select>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal('user')">Cancel</button>
@@ -283,8 +302,13 @@ tr:hover td{background:rgba(255,255,255,.02)}
 <!-- Confirm Delete -->
 <div class="overlay" id="modal-confirm">
   <div class="modal" style="max-width:380px">
-    <div class="modal-header"><h3>Confirm Delete</h3><button class="modal-close" onclick="closeModal('confirm')">×</button></div>
-    <div class="modal-body"><p style="color:var(--muted);font-size:.9rem" id="confirmMsg">Are you sure?</p></div>
+    <div class="modal-header">
+      <h3>Confirm Delete</h3>
+      <button class="modal-close" onclick="closeModal('confirm')">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--muted);font-size:.9rem" id="confirmMsg">Are you sure?</p>
+    </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal('confirm')">Cancel</button>
       <button class="btn-danger" onclick="confirmDeleteAction()">Delete</button>
@@ -293,36 +317,58 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </div>
 
 <script>
+// ── HELPERS ────────────────────────────────────────────
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  try { return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+  catch { return d; }
+}
+function toast(msg, type='success') {
+  const w = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = (type === 'success' ? '✅  ' : '❌  ') + msg;
+  w.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
 // ── DEBUG ──────────────────────────────────────────────
 function dlog(msg, type='info') {
   console.log('[DEBUG]', msg);
   const el = document.createElement('div');
   el.className = 'dlog ' + type;
-  el.textContent = new Date().toISOString().slice(11,23) + ' ' + msg;
+  el.textContent = new Date().toISOString().slice(11,23) + '  ' + msg;
   document.getElementById('debugLog').prepend(el);
 }
 
 // ── STATE ──────────────────────────────────────────────
-let customers=[],assets=[],documents=[],manuals=[],users=[];
-let deleteCallback=null;
+let customers = [], assets = [], documents = [], manuals = [], users = [];
+let deleteCallback = null;
 
 // ── INIT ───────────────────────────────────────────────
-(async()=>{
-  dlog('Page loaded, checking cookies: ' + document.cookie.split(';').map(c=>c.trim().split('=')[0]).join(', '), 'info');
-  dlog('Calling GET /api/portal-auth ...', 'info');
+(async () => {
+  dlog('Cookies: ' + (document.cookie.split(';').map(c=>c.trim().split('=')[0]).filter(Boolean).join(', ') || 'none visible (HttpOnly)'), 'info');
+  dlog('Calling GET /api/portal-auth…', 'info');
 
   const authRes = await fetch('/api/portal-auth', {
     method: 'GET',
     credentials: 'include',
-    headers: { 'Accept': 'application/json' }
+    headers: { Accept: 'application/json' }
   });
 
-  dlog('portal-auth status: ' + authRes.status, authRes.ok ? 'ok' : 'err');
+  dlog('portal-auth → ' + authRes.status, authRes.ok ? 'ok' : 'err');
 
   if (!authRes.ok) {
     const body = await authRes.text();
-    dlog('Auth failed body: ' + body, 'err');
-    dlog('Redirecting to login in 3s...', 'err');
+    dlog('Auth failed: ' + body, 'err');
+    dlog('Redirecting to login in 3s…', 'err');
     setTimeout(() => location.href = 'portal-login.html', 3000);
     return;
   }
@@ -331,14 +377,14 @@ let deleteCallback=null;
   dlog('Session: ' + JSON.stringify(session), 'ok');
 
   if (session.role !== 'admin') {
-    dlog('Not admin, role=' + session.role, 'err');
+    dlog('Not admin (role=' + session.role + '), redirecting…', 'err');
     setTimeout(() => location.href = 'portal-login.html', 3000);
     return;
   }
 
   document.getElementById('adminName').textContent = session.name || '';
 
-  dlog('Loading all data in parallel...', 'info');
+  dlog('Loading all data…', 'info');
   await Promise.all([loadCustomers(), loadAssets(), loadDocuments(), loadManuals(), loadUsers()]);
   updateStats();
   dlog('All data loaded.', 'ok');
@@ -347,72 +393,99 @@ let deleteCallback=null;
 // ── API HELPER ─────────────────────────────────────────
 async function api(url, method='GET', body) {
   dlog(method + ' ' + url, 'info');
-  const opts = { method, credentials: 'include', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' } };
+  const opts = {
+    method,
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' }
+  };
   if (body) opts.body = JSON.stringify(body);
   const r = await fetch(url, opts);
   const text = await r.text();
   let data = {};
-  try { data = JSON.parse(text); } catch(e) { dlog('JSON parse error for ' + url + ': ' + text.slice(0,200), 'err'); }
-  dlog(method + ' ' + url + ' → ' + r.status + ' ' + (r.ok?'OK':'FAIL'), r.ok?'ok':'err');
-  if (!r.ok) dlog('Response body: ' + text.slice(0,300), 'err');
+  try { data = JSON.parse(text); } catch(e) { dlog('JSON parse error: ' + text.slice(0,200), 'err'); }
+  dlog(method + ' ' + url + ' → ' + r.status + ' ' + (r.ok ? 'OK' : 'FAIL'), r.ok ? 'ok' : 'err');
+  if (!r.ok) dlog('Body: ' + text.slice(0,300), 'err');
   return { ok: r.ok, data, status: r.status };
 }
 
 // ── LOAD ───────────────────────────────────────────────
 async function loadCustomers() {
   const r = await api('/api/portal-data?resource=customers');
-  if (r.ok) { customers = Array.isArray(r.data) ? r.data : []; dlog('Customers loaded: ' + customers.length, 'ok'); }
-  else dlog('Failed to load customers', 'err');
+  if (r.ok) {
+    customers = Array.isArray(r.data) ? r.data : [];
+    dlog('Customers: ' + customers.length, 'ok');
+  } else {
+    dlog('Failed to load customers', 'err');
+  }
   renderCustomers();
   populateCustomerFilters();
 }
+
 async function loadAssets() {
   const r = await api('/api/portal-data?resource=assets');
-  if (r.ok) { assets = r.data.assets || []; dlog('Assets loaded: ' + assets.length, 'ok'); }
-  else dlog('Failed to load assets', 'err');
+  if (r.ok) {
+    assets = r.data.assets || [];
+    dlog('Assets: ' + assets.length, 'ok');
+  } else {
+    dlog('Failed to load assets', 'err');
+  }
   renderAssets();
 }
+
 async function loadDocuments() {
   const r = await api('/api/portal-data?resource=documents');
-  if (r.ok) { documents = Array.isArray(r.data) ? r.data : []; dlog('Documents loaded: ' + documents.length, 'ok'); }
-  else dlog('Failed to load documents', 'err');
+  if (r.ok) {
+    documents = Array.isArray(r.data) ? r.data : [];
+    dlog('Documents: ' + documents.length, 'ok');
+  } else {
+    dlog('Failed to load documents', 'err');
+  }
   renderDocuments();
 }
+
 async function loadManuals() {
   const r = await api('/api/portal-data?resource=manuals');
-  if (r.ok) { manuals = Array.isArray(r.data) ? r.data : []; dlog('Manuals loaded: ' + manuals.length, 'ok'); }
-  else dlog('Failed to load manuals', 'err');
+  if (r.ok) {
+    manuals = Array.isArray(r.data) ? r.data : [];
+    dlog('Manuals: ' + manuals.length, 'ok');
+  } else {
+    dlog('Failed to load manuals', 'err');
+  }
   renderManuals();
 }
+
 async function loadUsers() {
   const r = await api('/api/portal-users');
-  if (r.ok) { users = Array.isArray(r.data) ? r.data : []; dlog('Users loaded: ' + users.length, 'ok'); }
-  else dlog('Failed to load users', 'err');
+  if (r.ok) {
+    users = Array.isArray(r.data) ? r.data : [];
+    dlog('Users: ' + users.length, 'ok');
+  } else {
+    dlog('Failed to load users', 'err');
+  }
   renderUsers();
 }
 
 // ── STATS ──────────────────────────────────────────────
 function updateStats() {
-  document.getElementById('statCustomers').textContent = customers.filter(c=>c.active).length;
-  document.getElementById('statAssets').textContent = assets.filter(a=>a.active===1||a.active==='1'||a.active===true).length;
-  document.getElementById('statDocs').textContent = documents.filter(d=>d.active).length;
-  document.getElementById('statManuals').textContent = manuals.filter(m=>m.active===1||m.active===true).length;
+  document.getElementById('statCustomers').textContent = customers.filter(c => c.active).length;
+  document.getElementById('statAssets').textContent    = assets.filter(a => a.active === 1 || a.active === '1' || a.active === true).length;
+  document.getElementById('statDocs').textContent      = documents.filter(d => d.active).length;
+  document.getElementById('statManuals').textContent   = manuals.filter(m => m.active === 1 || m.active === true).length;
 }
 
 // ── TABS ───────────────────────────────────────────────
 function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t,i)=>{
-    t.classList.toggle('active',['customers','assets','documents','manuals','users'][i]===tab);
-  });
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+tab).classList.add('active');
+  const names = ['customers','assets','documents','manuals','users'];
+  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', names[i] === tab));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
 }
 
 // ── CUSTOMER FILTERS ───────────────────────────────────
 function populateCustomerFilters() {
-  const opts = customers.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  const opts = customers.map(c => `<option value="${esc(c.id)}">${esc(c.name)}</option>`).join('');
   document.getElementById('assetCustFilter').innerHTML = '<option value="">All Customers</option>' + opts;
-  document.getElementById('docCustFilter').innerHTML = '<option value="">All Customers</option>' + opts;
+  document.getElementById('docCustFilter').innerHTML   = '<option value="">All Customers</option>' + opts;
   const dc = document.getElementById('docCustomer');
   if (dc) dc.innerHTML = '<option value="">— Select —</option>' + opts;
   const uc = document.getElementById('uCustomer');
@@ -422,232 +495,312 @@ function populateCustomerFilters() {
 // ── RENDER CUSTOMERS ───────────────────────────────────
 function renderCustomers() {
   const q = document.getElementById('custSearch').value.toLowerCase();
-  const rows = customers.filter(c=>!q||c.name.toLowerCase().includes(q)||c.email?.toLowerCase().includes(q));
+  const rows = customers.filter(c =>
+    !q || c.name.toLowerCase().includes(q) || (c.email || '').toLowerCase().includes(q)
+  );
   const tb = document.getElementById('custTable');
-  if (!rows.length) { tb.innerHTML=`<tr><td colspan="5"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No customers found</div></td></tr>`; return; }
-  tb.innerHTML = rows.map(c=>`
-    <tr>
-      <td><strong>${esc(c.name)}</strong></td>
-      <td>${esc(c.email||'—')}</td>
-      <td>${esc(c.phone||'—')}</td>
-      <td style="color:var(--muted);font-size:.8rem">${esc(c.address||'—')}</td>
-      <td><span class="badge \${c.active?'badge-green':'badge-red'}">${c.active?'Active':'Inactive'}</span></td>
-    </tr>`).join('');
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="5"><div class="empty">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      No customers found</div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.map(c => {
+    const name    = esc(c.name);
+    const email   = esc(c.email || '—');
+    const phone   = esc(c.phone || '—');
+    const address = esc(c.address || '—');
+    const badge   = c.active ? 'badge-green' : 'badge-red';
+    const status  = c.active ? 'Active' : 'Inactive';
+    return `<tr>
+      <td><strong>${name}</strong></td>
+      <td>${email}</td>
+      <td>${phone}</td>
+      <td style="color:var(--muted);font-size:.8rem">${address}</td>
+      <td><span class="badge \${badge}">${status}</span></td>
+    </tr>`;
+  }).join('');
 }
 
 // ── RENDER ASSETS ──────────────────────────────────────
 function renderAssets() {
-  const q = document.getElementById('assetSearch').value.toLowerCase();
+  const q  = document.getElementById('assetSearch').value.toLowerCase();
   const cf = document.getElementById('assetCustFilter').value;
   const rows = assets.filter(a =>
     (!cf || a.company_uuid === cf) &&
-    (!q || a.name.toLowerCase().includes(q) ||
-     a.make?.toLowerCase().includes(q) ||
-     a.model?.toLowerCase().includes(q))
+    (!q  || (a.name  || '').toLowerCase().includes(q) ||
+            (a.make  || '').toLowerCase().includes(q) ||
+            (a.model || '').toLowerCase().includes(q))
   );
   const tb = document.getElementById('assetTable');
   if (!rows.length) {
-    tb.innerHTML = `<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>No assets found</div></td></tr>`;
+    tb.innerHTML = `<tr><td colspan="7"><div class="empty">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      No assets found</div></td></tr>`;
     return;
   }
   tb.innerHTML = rows.map(a => {
-    const active = a.active === 1 || a.active === '1';
+    const active   = a.active === 1 || a.active === '1';
+    const name     = esc(a.name          || 'Unnamed');
+    const type     = esc(a.asset_type_name || '—');
+    const make     = esc(a.make          || '—');
+    const model    = esc(a.model         || '—');
+    const serial   = esc(a.serial        || '—');
+    const location = esc(a.location      || '—');
+    const due      = esc(a.service_due   || '—');
+    const badge    = active ? 'badge-green' : 'badge-red';
+    const status   = active ? 'Active' : 'Inactive';
     return `<tr>
-      <td><strong>${esc(a.name)}</strong></td>
-      <td style="color:var(--muted);font-size:.8rem">${esc(a.asset_type_name || '—')}</td>
-      <td>${esc(a.make || '—')} / \${esc(a.model || '—')}</td>
-      <td style="color:var(--muted);font-family:monospace;font-size:.8rem">${esc(a.serial || '—')}</td>
-      <td style="color:var(--muted);font-size:.8rem">${esc(a.location || '—')}</td>
-      <td style="color:var(--muted);font-size:.8rem">${esc(a.service_due || '—')}</td>
-      <td><span class="badge \${active ? 'badge-green' : 'badge-red'}">${active ? 'Active' : 'Inactive'}</span></td>
+      <td><strong>${name}</strong></td>
+      <td style="color:var(--muted);font-size:.8rem">${type}</td>
+      <td>${make} / \${model}</td>
+      <td style="color:var(--muted);font-family:monospace;font-size:.8rem">${serial}</td>
+      <td style="color:var(--muted);font-size:.8rem">${location}</td>
+      <td style="color:var(--muted);font-size:.8rem">${due}</td>
+      <td><span class="badge \${badge}">${status}</span></td>
     </tr>`;
   }).join('');
 }
 
 // ── RENDER DOCUMENTS ───────────────────────────────────
 function renderDocuments() {
-  const q = document.getElementById('docSearch').value.toLowerCase();
+  const q  = document.getElementById('docSearch').value.toLowerCase();
   const cf = document.getElementById('docCustFilter').value;
-  const rows = documents.filter(d=>(!cf||d.customerId===cf)&&(!q||d.title.toLowerCase().includes(q)));
+  const rows = documents.filter(d =>
+    (!cf || d.customerId === cf) &&
+    (!q  || (d.title || '').toLowerCase().includes(q))
+  );
   const tb = document.getElementById('docTable');
-  if (!rows.length) { tb.innerHTML=`<tr><td colspan="5"><div class="empty"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>No documents found</div></td></tr>`; return; }
-  tb.innerHTML = rows.map(d=>{
-    const cust = customers.find(c=>c.id===d.customerId);
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="5"><div class="empty">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      No documents found</div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.map(d => {
+    const cust    = customers.find(c => c.id === d.customerId);
+    const title   = esc(d.title);
+    const fileUrl = esc(d.fileUrl);
+    const custName = cust ? esc(cust.name) : '—';
+    const uploaded = fmtDate(d.uploadedAt);
+    const docId   = esc(d.id);
+    const docTitle = esc(d.title);
     return `<tr>
-      <td><a href="${esc(d.fileUrl)}" target="_blank" style="color:var(--accent)">${esc(d.title)}</a></td>
+      <td><a href="${fileUrl}" target="_blank" style="color:var(--accent)">${title}</a></td>
       <td>${docTypeBadge(d.type)}</td>
-      <td>${cust?esc(cust.name):'—'}</td>
-      <td style="color:var(--muted)">${fmtDate(d.uploadedAt)}</td>
-      <td><div class="actions"><button class="btn-icon danger" onclick="deleteItem('document','${d.id}','${esc(d.title)}')">🗑</button></div></td>
-    </tr>`;}).join('');
+      <td>${custName}</td>
+      <td style="color:var(--muted)">${uploaded}</td>
+      <td><div class="actions">
+        <button class="btn-icon danger" onclick="deleteItem('document','${docId}','${docTitle}')">🗑 Delete</button>
+      </div></td>
+    </tr>`;
+  }).join('');
 }
 
 function docTypeBadge(t) {
-  const map={Warranty:'badge-green',Invoice:'badge-amber',Certificate:'badge-green',Report:'badge-blue',Other:'badge-muted'};
-  return `<span class="badge \${map[t]||'badge-muted'}">${t||'Other'}</span>`;
+  const map = { Warranty:'badge-green', Invoice:'badge-amber', Certificate:'badge-green', Report:'badge-blue', Other:'badge-muted' };
+  return `<span class="badge \${map[t] || 'badge-muted'}">${esc(t) || 'Other'}</span>`;
 }
 
 // ── RENDER MANUALS ─────────────────────────────────────
 function renderManuals() {
   const q = document.getElementById('manSearch').value.toLowerCase();
-  const rows = manuals.filter(m=>!q||m.title.toLowerCase().includes(q)||m.tags?.some(t=>t.toLowerCase().includes(q)));
+  const rows = manuals.filter(m =>
+    !q || (m.title || '').toLowerCase().includes(q) ||
+    (Array.isArray(m.tags) && m.tags.some(t => t.toLowerCase().includes(q)))
+  );
   const tb = document.getElementById('manTable');
-  if (!rows.length) { tb.innerHTML=`<tr><td colspan="4"><div class="empty"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>No manuals found</div></td></tr>`; return; }
-  tb.innerHTML = rows.map(m=>{
-    const active = m.active===1||m.active===true;
-    const typeBadge = {video:'badge-blue',pdf:'badge-amber',richtext:'badge-muted',call:'badge-green'};
-    const tags = Array.isArray(m.tags)&&m.tags.length ? m.tags.map(t=>`<span class="badge badge-muted" style="margin-right:3px">${esc(t)}</span>`).join('') : '—';
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="4"><div class="empty">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      No manuals found</div></td></tr>`;
+    return;
+  }
+  const typeClass = { video:'badge-blue', pdf:'badge-amber', richtext:'badge-muted', call:'badge-green' };
+  tb.innerHTML = rows.map(m => {
+    const active  = m.active === 1 || m.active === true;
+    const title   = esc(m.title);
+    const atype   = esc(m.article_type || 'richtext');
+    const atClass = typeClass[m.article_type] || 'badge-muted';
+    const tags    = Array.isArray(m.tags) && m.tags.length
+      ? m.tags.map(t => `<span class="badge badge-muted" style="margin-right:3px">${esc(t)}</span>`).join('')
+      : '—';
+    const badge  = active ? 'badge-green' : 'badge-red';
+    const status = active ? 'Active' : 'Inactive';
     return `<tr>
-      <td><strong>${esc(m.title)}</strong></td>
-      <td><span class="badge \${typeBadge[m.article_type]||'badge-muted'}">${m.article_type||'richtext'}</span></td>
+      <td><strong>${title}</strong></td>
+      <td><span class="badge \${atClass}">${atype}</span></td>
       <td>${tags}</td>
-      <td><span class="badge \${active?'badge-green':'badge-red'}">${active?'Active':'Inactive'}</span></td>
-    </tr>`;}).join('');
+      <td><span class="badge \${badge}">${status}</span></td>
+    </tr>`;
+  }).join('');
 }
 
 // ── RENDER USERS ───────────────────────────────────────
 function renderUsers() {
   const q = document.getElementById('userSearch').value.toLowerCase();
-  const rows = users.filter(u=>!q||u.name.toLowerCase().includes(q)||u.email.toLowerCase().includes(q));
+  const rows = users.filter(u =>
+    !q || (u.name  || '').toLowerCase().includes(q) ||
+          (u.email || '').toLowerCase().includes(q)
+  );
   const tb = document.getElementById('userTable');
-  if (!rows.length) { tb.innerHTML=`<tr><td colspan="7"><div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No users found</div></td></tr>`; return; }
-  tb.innerHTML = rows.map(u=>{
-    const cust = customers.find(c=>c.id===u.customerId);
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="7"><div class="empty">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      No users found</div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.map(u => {
+    const cust      = customers.find(c => c.id === u.customerId);
+    const name      = esc(u.name);
+    const email     = esc(u.email);
+    const role      = esc(u.role);
+    const custName  = cust ? esc(cust.name) : '—';
+    const created   = fmtDate(u.createdAt);
+    const uid       = esc(u.id);
+    const roleClass = u.role === 'admin' ? 'badge-blue' : 'badge-muted';
+    const actClass  = u.active ? 'badge-green' : 'badge-red';
+    const actLabel  = u.active ? 'Active' : 'Inactive';
+    const toggleLabel = u.active ? '🔒 Deactivate' : '✅ Activate';
+    const toggleVal   = u.active ? 'false' : 'true';
     return `<tr>
-      <td><strong>${esc(u.name)}</strong></td>
-      <td>${esc(u.email)}</td>
-      <td><span class="badge \${u.role==='admin'?'badge-blue':'badge-muted'}">${u.role}</span></td>
-      <td>${cust?esc(cust.name):'<span style="color:var(--muted)">—</span>'}</td>
-      <td><span class="badge \${u.active?'badge-green':'badge-red'}">${u.active?'Active':'Inactive'}</span></td>
-      <td style="color:var(--muted)">${fmtDate(u.createdAt)}</td>
+      <td><strong>${name}</strong></td>
+      <td>${email}</td>
+      <td><span class="badge \${roleClass}">${role}</span></td>
+      <td>${custName}</td>
+      <td><span class="badge \${actClass}">${actLabel}</span></td>
+      <td style="color:var(--muted)">${created}</td>
       <td><div class="actions">
-        <button class="btn-icon" onclick="editUser('${u.id}')">✏️ Edit</button>
-        <button class="btn-icon" onclick="toggleUserActive('${u.id}',${!u.active})">${u.active?'🔒 Deactivate':'✅ Activate'}</button>
+        <button class="btn-icon" onclick="editUser('${uid}')">✏️ Edit</button>
+        <button class="btn-icon" onclick="toggleUserActive('${uid}',${toggleVal})">${toggleLabel}</button>
       </div></td>
-    </tr>`;}).join('');
+    </tr>`;
+  }).join('');
 }
 
 // ── MODALS ─────────────────────────────────────────────
-function openModal(type) { document.getElementById('modal-'+type).classList.add('open'); }
-function closeModal(type) { document.getElementById('modal-'+type).classList.remove('open'); }
+function openModal(type)  { document.getElementById('modal-' + type).classList.add('open'); }
+function closeModal(type) { document.getElementById('modal-' + type).classList.remove('open'); }
+
+['document','user','confirm'].forEach(type => {
+  document.getElementById('modal-' + type).addEventListener('click', e => {
+    if (e.target === document.getElementById('modal-' + type)) closeModal(type);
+  });
+});
 
 // ── DOCUMENT MODAL ─────────────────────────────────────
-document.getElementById('modal-document').addEventListener('click',e=>{if(e.target===document.getElementById('modal-document'))closeModal('document');});
-
 async function saveDocument() {
-  const id = document.getElementById('docId').value;
+  const id  = document.getElementById('docId').value;
   const body = {
     customerId: document.getElementById('docCustomer').value,
-    title: document.getElementById('docTitle').value.trim(),
-    type: document.getElementById('docType').value,
-    fileUrl: document.getElementById('docUrl').value.trim(),
-    active: true
+    title:      document.getElementById('docTitle').value.trim(),
+    type:       document.getElementById('docType').value,
+    fileUrl:    document.getElementById('docUrl').value.trim(),
+    active:     true
   };
-  if (!body.title||!body.customerId||!body.fileUrl) { toast('Title, customer and URL are required','error'); return; }
+  if (!body.title || !body.customerId || !body.fileUrl) {
+    toast('Title, customer and URL are required', 'error'); return;
+  }
   const r = id
-    ? await api('/api/portal-data?resource=documents','PUT',{id,...body})
-    : await api('/api/portal-data?resource=documents','POST',body);
+    ? await api('/api/portal-data?resource=documents', 'PUT',  { id, ...body })
+    : await api('/api/portal-data?resource=documents', 'POST', body);
   if (r.ok) {
-    toast('Document saved','success');
+    toast('Document saved', 'success');
     closeModal('document');
-    document.getElementById('docId').value='';
-    document.getElementById('docTitle').value='';
-    document.getElementById('docUrl').value='';
+    document.getElementById('docId').value    = '';
+    document.getElementById('docTitle').value = '';
+    document.getElementById('docUrl').value   = '';
     await loadDocuments();
     updateStats();
-  } else toast(r.data.error||'Error saving document','error');
+  } else {
+    toast(r.data.error || 'Error saving document', 'error');
+  }
 }
 
 // ── USER MODAL ─────────────────────────────────────────
 function toggleUserCustomer() {
-  document.getElementById('uCustomerField').style.display = document.getElementById('uRole').value==='admin'?'none':'block';
+  document.getElementById('uCustomerField').style.display =
+    document.getElementById('uRole').value === 'admin' ? 'none' : 'block';
 }
+
 function editUser(id) {
-  const u = users.find(x=>x.id===id); if (!u) return;
+  const u = users.find(x => x.id === id); if (!u) return;
   document.getElementById('userModalTitle').textContent = 'Edit User';
-  document.getElementById('userId').value = u.id;
-  document.getElementById('uName').value = u.name||'';
-  document.getElementById('uEmail').value = u.email||'';
-  document.getElementById('uRole').value = u.role||'customer';
-  document.getElementById('uCustomer').value = u.customerId||'';
-  document.getElementById('uActive').value = String(u.active);
-  document.getElementById('uPwField').style.display = 'none';
+  document.getElementById('userId').value   = u.id;
+  document.getElementById('uName').value    = u.name  || '';
+  document.getElementById('uEmail').value   = u.email || '';
+  document.getElementById('uRole').value    = u.role  || 'customer';
+  document.getElementById('uCustomer').value = u.customerId || '';
+  document.getElementById('uActive').value  = String(u.active);
+  document.getElementById('uPwField').style.display      = 'none';
   document.getElementById('uResetPwField').style.display = 'block';
-  document.getElementById('uActiveField').style.display = 'block';
+  document.getElementById('uActiveField').style.display  = 'block';
   document.getElementById('userSaveBtn').textContent = 'Update User';
   toggleUserCustomer();
   openModal('user');
 }
-document.getElementById('modal-user').addEventListener('click',e=>{if(e.target===document.getElementById('modal-user'))closeModal('user');});
 
 async function saveUser() {
   const id = document.getElementById('userId').value;
-  const pw = id ? document.getElementById('uPasswordReset').value : document.getElementById('uPassword').value;
+  const pw = id
+    ? document.getElementById('uPasswordReset').value
+    : document.getElementById('uPassword').value;
   const body = {
-    name: document.getElementById('uName').value.trim(),
-    email: document.getElementById('uEmail').value.trim(),
-    role: document.getElementById('uRole').value,
-    customerId: document.getElementById('uCustomer').value||null,
-    active: id ? document.getElementById('uActive').value==='true' : true
+    name:       document.getElementById('uName').value.trim(),
+    email:      document.getElementById('uEmail').value.trim(),
+    role:       document.getElementById('uRole').value,
+    customerId: document.getElementById('uCustomer').value || null,
+    active:     id ? document.getElementById('uActive').value === 'true' : true
   };
   if (pw) body.password = pw;
-  if (!body.name||!body.email) { toast('Name and email are required','error'); return; }
-  if (!id&&!pw) { toast('Password is required for new users','error'); return; }
+  if (!body.name || !body.email) { toast('Name and email are required', 'error'); return; }
+  if (!id && !pw) { toast('Password is required for new users', 'error'); return; }
   const r = id
-    ? await api('/api/portal-users','PUT',{id,...body})
-    : await api('/api/portal-users','POST',body);
+    ? await api('/api/portal-users', 'PUT',  { id, ...body })
+    : await api('/api/portal-users', 'POST', body);
   if (r.ok) {
-    toast(id?'User updated':'User created','success');
+    toast(id ? 'User updated' : 'User created', 'success');
     closeModal('user');
-    document.getElementById('userId').value='';
-    document.getElementById('userModalTitle').textContent='Create Portal User';
-    document.getElementById('uPwField').style.display='block';
-    document.getElementById('uResetPwField').style.display='none';
-    document.getElementById('uActiveField').style.display='none';
-    document.getElementById('userSaveBtn').textContent='Create User';
+    document.getElementById('userId').value = '';
+    document.getElementById('userModalTitle').textContent = 'Create Portal User';
+    document.getElementById('uPwField').style.display      = 'block';
+    document.getElementById('uResetPwField').style.display = 'none';
+    document.getElementById('uActiveField').style.display  = 'none';
+    document.getElementById('userSaveBtn').textContent = 'Create User';
     await loadUsers();
-  } else toast(r.data.error||'Error saving user','error');
+  } else {
+    toast(r.data.error || 'Error saving user', 'error');
+  }
 }
 
 async function toggleUserActive(id, active) {
-  const r = await api('/api/portal-users','PUT',{id,active});
-  if (r.ok) { toast(active?'User activated':'User deactivated','success'); await loadUsers(); }
-  else toast('Error updating user','error');
+  const r = await api('/api/portal-users', 'PUT', { id, active });
+  if (r.ok) { toast(active ? 'User activated' : 'User deactivated', 'success'); await loadUsers(); }
+  else toast('Error updating user', 'error');
 }
 
 // ── DELETE ─────────────────────────────────────────────
 function deleteItem(type, id, name) {
   document.getElementById('confirmMsg').textContent = `Delete "${name}"? This cannot be undone.`;
   deleteCallback = async () => {
-    const r = await api('/api/portal-data?resource=documents','DELETE',{id});
+    const r = await api('/api/portal-data?resource=documents', 'DELETE', { id });
     if (r.ok) {
-      toast('Document deleted','success');
+      toast('Document deleted', 'success');
       closeModal('confirm');
       await loadDocuments();
       updateStats();
-    } else toast(r.data.error||'Delete failed','error');
+    } else {
+      toast(r.data.error || 'Delete failed', 'error');
+    }
   };
   openModal('confirm');
 }
 function confirmDeleteAction() { if (deleteCallback) deleteCallback(); }
-document.getElementById('modal-confirm').addEventListener('click',e=>{if(e.target===document.getElementById('modal-confirm'))closeModal('confirm');});
 
 // ── SIGN OUT ───────────────────────────────────────────
 async function signOut() {
-  await api('/api/portal-auth','POST',{action:'logout'});
-  location.href='portal-login.html';
-}
-
-// ── HELPERS ────────────────────────────────────────────
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function fmtDate(d){if(!d)return'—';try{return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}catch{return d;}}
-function toast(msg,type='success'){
-  const w=document.getElementById('toastWrap');
-  const t=document.createElement('div');
-  t.className=`toast \${type}`;
-  t.innerHTML=(type==='success'?'✅ ':'❌ ')+msg;
-  w.appendChild(t);
-  setTimeout(()=>t.remove(),3500);
+  await api('/api/portal-auth', 'POST', { action: 'logout' });
+  location.href = 'portal-login.html';
 }
 </script>
 </body>
