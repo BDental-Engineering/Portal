@@ -12,9 +12,19 @@ async function ghGet(path) {
     { headers: { Authorization: `token \${GH_TOKEN}`, Accept: 'application/vnd.github.v3+json' } }
   );
   if (r.status === 404) return { content: null, sha: null };
+  if (!r.ok) {
+    const err = await r.text();
+    console.error('GitHub API error:', r.status, err);
+    return { content: null, sha: null };
+  }
   const d = await r.json();
+  if (!d.content) {
+    console.error('GitHub response missing content:', JSON.stringify(d));
+    return { content: null, sha: null };
+  }
   return { content: JSON.parse(Buffer.from(d.content, 'base64').toString('utf8')), sha: d.sha };
 }
+
 
 async function ghPut(path, data, sha) {
   const body = { message: `update \${path}`, content: Buffer.from(JSON.stringify(data, null, 2)).toString('base64'), branch: GH_BRANCH };
