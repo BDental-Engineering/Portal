@@ -64,6 +64,12 @@
   </style>
 </head>
 <body>
+  <!-- Add this right after <body> opens, before <header> -->
+<div id="debugPanel" style="background:#0a0e1a;border:1px solid #f59e0b;border-radius:10px;margin:1rem;padding:1rem;font-family:monospace;font-size:.75rem;color:#fcd34d;max-height:200px;overflow-y:auto">
+  <strong style="color:#f59e0b">🔍 DEBUG — remove before production</strong>
+  <div id="debugLog"></div>
+</div>
+
   <header>
     <h1>Customer Portal</h1>
     <div class="user-info">
@@ -80,56 +86,92 @@
   </main>
 
   <script>
-    async function init() {
-      const authRes = await fetch('/api/portal-auth');
-      if (!authRes.ok) {
-        window.location.href = '/login.html';
-        return;
-      }
-      const session = await authRes.json();
-      document.getElementById('userName').textContent = session.name || session.userId;
+function dlog(msg, type='info') {
+  console.log('[DEBUG]', msg);
+  const el = document.createElement('div');
+  el.style.cssText = 'padding:2px 0;border-bottom:1px solid rgba(245,158,11,.15);color:' + (type==='ok'?'#86efac':type==='err'?'#fca5a5':'#93c5fd');
+  el.textContent = new Date().toISOString().slice(11,23) + ' ' + msg;
+  document.getElementById('debugLog').prepend(el);
+}
 
-      const dataRes = await fetch('/api/portal-data?resource=assets');
-      const grid = document.getElementById('assetGrid');
+async function init() {
+  dlog('Cookies present: ' + (document.cookie ? document.cookie.split(';').map(c=>c.trim().split('=')[0]).join(', ') : 'NONE'), 'info');
+  dlog('Calling /api/portal-auth...', 'info');
 
-      if (!dataRes.ok) {
-        grid.innerHTML = '<p class="empty">Failed to load assets.</p>';
-        return;
-      }
+  const authRes = await fetch('/api/portal-auth', {
+    method: 'GET',
+    credentials: 'include',
+    headers: { 'Accept': 'application/json' }
+  });
 
-      const { assets } = await dataRes.json();
+  dlog('portal-auth → ' + authRes.status, authRes.ok ? 'ok' : 'err');
 
-      if (!assets || !assets.length) {
-        grid.innerHTML = '<p class="empty">No assets found for your account.</p>';
-        return;
-      }
+  if (!authRes.ok) {
+    const body = await authRes.text();
+    dlog('Auth body: ' + body, 'err');
+    window.location.href = '/login.html';
+    return;
+  }
 
-      grid.innerHTML = assets.map(a => {
-        const active = a.active === 1 || a.active === '1';
-        return '<div class="card">' +
-          '<h3>' + (a.name || 'Unnamed Asset') + '</h3>' +
-          '<p>Type: <span>' + (a.asset_type_name || '—') + '</span></p>' +
-          '<p>Make: <span>' + (a.make || '—') + '</span></p>' +
-          '<p>Model: <span>' + (a.model || '—') + '</span></p>' +
-          '<p>Serial: <span>' + (a.serial || '—') + '</span></p>' +
-          '<p>Location: <span>' + (a.location || '—') + '</span></p>' +
-          (a.service_due ? '<p>Service Due: <span>' + a.service_due + '</span></p>' : '') +
-          '<span class="badge ' + (active ? 'active' : 'inactive') + '">' +
-          (active ? 'Active' : 'Inactive') + '</span>' +
-          '</div>';
-      }).join('');
-    }
+  const session = await authRes.json();
+  dlog('Session: ' + JSON.stringify(session), 'ok');
+  document.getElementById('userName').textContent = session.name || session.userId;
 
-    document.getElementById('logoutBtn').addEventListener('click', async function() {
-      await fetch('/api/portal-auth', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'logout' })
-      });
-      window.location.href = '/login.html';
-    });
+  dlog('Calling /api/portal-data?resource=assets...', 'info');
+  const dataRes = await fetch('/api/portal-data?resource=assets', {
+    credentials: 'include',
+    headers: { 'Accept': 'application/json' }
+  });
 
-    init();
-  </script>
+  dlog('assets → ' + dataRes.status, dataRes.ok ? 'ok' : 'err');
+
+  const grid = document.getElementById('assetGrid');
+
+  if (!dataRes.ok) {
+    const body = await dataRes.text();
+    dlog('Assets error body: ' + body, 'err');
+    grid.innerHTML = '<p class="empty">Failed to load assets.</p>';
+    return;
+  }
+
+  const payload = await dataRes.json();
+  dlog('Assets payload keys: ' + Object.keys(payload).join(', '), 'info');
+
+  const assets = payload.assets || [];
+  dlog('Assets count: ' + assets.length, assets.length ? 'ok' : 'err');
+
+  if (!assets.length) {
+    grid.innerHTML = '<p class="empty">No assets found for your account.</p>';
+    return;
+  }
+
+  grid.innerHTML = assets.map(a => {
+    const active = a.active === 1 || a.active === '1';
+    return '<div class="card">' +
+      '<h3>' + (a.name || 'Unnamed Asset') + '</h3>' +
+      '<p>Type: <span>' + (a.asset_type_name || '—') + '</span></p>' +
+      '<p>Make: <span>' + (a.make || '—') + '</span></p>' +
+      '<p>Model: <span>' + (a.model || '—') + '</span></p>' +
+      '<p>Serial: <span>' + (a.serial || '—') + '</span></p>' +
+      '<p>Location: <span>' + (a.location || '—') + '</span></p>' +
+      (a.service_due ? '<p>Service Due: <span>' + a.service_due + '</span></p>' : '') +
+      '<span class="badge ' + (active ? 'active' : 'inactive') + '">' + (active ? 'Active' : 'Inactive') + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+document.getElementById('logoutBtn').addEventListener('click', async function() {
+  await fetch('/api/portal-auth', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'logout' })
+  });
+  window.location.href = '/login.html';
+});
+
+init();
+</script>
+
 </body>
 </html>
