@@ -81,7 +81,6 @@
 
   <script>
     async function init() {
-      // Check session
       const authRes = await fetch('/api/portal-auth');
       if (!authRes.ok) {
         window.location.href = '/login.html';
@@ -90,7 +89,6 @@
       const session = await authRes.json();
       document.getElementById('userName').textContent = session.name || session.userId;
 
-      // Load assets
       const dataRes = await fetch('/api/portal-data?resource=assets');
       const grid = document.getElementById('assetGrid');
 
@@ -101,7 +99,7 @@
 
       const { assets } = await dataRes.json();
 
-      if (!assets.length) {
+      if (!assets || !assets.length) {
         grid.innerHTML = '<p class="empty">No assets found for your account.</p>';
         return;
       }
@@ -111,9 +109,13 @@
         return '<div class="card">' +
           '<h3>' + (a.name || 'Unnamed Asset') + '</h3>' +
           '<p>Type: <span>' + (a.asset_type_name || '—') + '</span></p>' +
-          '<p>Serial: <span>' + (a.serial_number || '—') + '</span>' + '</p>' +
-          '<p>Location: <span>' + (a.site_name || '—') + '</span></p>' +
-          '<span class="badge ' + (active ? 'active' : 'inactive') + '">' + (active ? 'Active' : 'Inactive') + '</span>' +
+          '<p>Make: <span>' + (a.make || '—') + '</span></p>' +
+          '<p>Model: <span>' + (a.model || '—') + '</span></p>' +
+          '<p>Serial: <span>' + (a.serial || '—') + '</span></p>' +
+          '<p>Location: <span>' + (a.location || '—') + '</span></p>' +
+          (a.service_due ? '<p>Service Due: <span>' + a.service_due + '</span></p>' : '') +
+          '<span class="badge ' + (active ? 'active' : 'inactive') + '">' +
+          (active ? 'Active' : 'Inactive') + '</span>' +
           '</div>';
       }).join('');
     }
