@@ -1,90 +1,58 @@
-import crypto from 'crypto';
+const SM8_KEY = process.env.SERVICEM8_API_KEY;
 
-const GH_TOKEN  = process.env.GITHUB_TOKEN;
-const GH_OWNER  = process.env.GITHUB_OWNER;
-const GH_REPO   = process.env.GITHUB_REPO;
-const GH_BRANCH = process.env.GITHUB_BRANCH || 'main';
-const FILE       = 'data/portal_customers.json';
-
-async function ghGet(path) {
-  const r = await fetch(
-    `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}?ref=${GH_BRANCH}`,
-    { headers: { Authorization: `token \${GH_TOKEN}`, Accept: 'application/vnd.github.v3+json' } }
-  );
-  if (r.status === 404) return { content: null, sha: null };
+async function sm8Get(endpoint) {
+  const r = await fetch('https://api.servicem8.com/api_1.0/' + endpoint, {
+    headers: {
+      'X-Api-Key': SM8_KEY,
+      'Accept': 'application/json'
+    }
+  });
   if (!r.ok) {
-    const err = await r.text();
-    console.error('GitHub API error:', r.status, err);
-    return { content: null, sha: null };
+    console.error('ServiceM8 error:', r.status, await r.text());
+    return null;
   }
-  const d = await r.json();
-  if (!d.content) {
-    console.error('GitHub response missing content:', JSON.stringify(d));
-    return { content: null, sha: null };
-  }
-  return { content: JSON.parse(Buffer.from(d.content, 'base64').toString('utf8')), sha: d.sha };
+  return r.json();
 }
 
-
-async function ghPut(path, data, sha) {
-  const body = { message: `update \${path}`, content: Buffer.from(JSON.stringify(data, null, 2)).toString('base64'), branch: GH_BRANCH };
-  if (sha) body.sha = sha;
-  const r = await fetch(
-    `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}`,
-    { method: 'PUT', headers: { Authorization: `token \${GH_TOKEN}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+function parseCookies(h = '') {
+  return Object.fromEntries(
+    h.split(';').map(c => c.trim().split('=').map(decodeURIComponent))
   );
-  return r.ok;
 }
 
 async function getSession(token) {
   if (!token) return null;
-  const { content } = await ghGet('data/portal_sessions.json');
+  // Re-use your existing session check from portal-auth
+  const { content } = await ghGet('data/portal_sessions.json').catch(() => ({ content: null }));
   return (content || []).find(s => s.token === token && new Date(s.expiresAt) > new Date()) || null;
 }
 
-function parseCookies(h = '') {
-  return Object.fromEntries(h.split(';').map(c => c.trim().split('=').map(decodeURIComponent)));
-}
-
 export default async function handler(req, res) {
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+
   const token = parseCookies(req.headers.cookie || '')['portal_session'];
-  const session = await getSession(token);
-  if (!session) return res.status(401).json({ error: 'Not authenticated' });
+
+  // Validate session via portal-auth
+  const authRes = await fetch('https://' + req.headers.host + '/api/portal-auth', {
+    headers: { cookie: req.headers.cookie || '' }
+  });
+  if (!authRes.ok) return res.status(401).json({ error: 'Not authenticated' });
+
+  const session = await authRes.json();
   if (session.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
 
-  const { content, sha } = await ghGet(FILE);
-  const customers = content || [];
+  const companies = await sm8Get('company.json?%24filter=active%20eq%201');
+  if (!companies) return res.status(500).json({ error: 'Failed to load customers' });
 
-  if (req.method === 'GET') {
-    return res.status(200).json(customers);
-  }
+  // Map SM8 company fields to your portal customer format
+  const customers = companies.map(c => ({
+    id: c.uuid,
+    name: c.name,
+    email: c.email || '',
+    phone: c.phone || '',
+    address: c.address || [c.address_street, c.address_city, c.address_state, c.address_postcode].filter(Boolean).join(', '),
+    active: c.active === 1
+  }));
 
-  if (req.method === 'POST') {
-    const { name, email, phone, address, active } = req.body;
-    if (!name) return res.status(400).json({ error: 'Name required' });
-    const rec = { id: crypto.randomUUID(), name, email: email || '', phone: phone || '', address: address || '', active: active !== false, createdAt: new Date().toISOString() };
-    customers.push(rec);
-    await ghPut(FILE, customers, sha);
-    return res.status(201).json(rec);
-  }
-
-  if (req.method === 'PUT') {
-    const { id, ...fields } = req.body;
-    const idx = customers.findIndex(c => c.id === id);
-    if (idx === -1) return res.status(404).json({ error: 'Not found' });
-    customers[idx] = { ...customers[idx], ...fields };
-    await ghPut(FILE, customers, sha);
-    return res.status(200).json(customers[idx]);
-  }
-
-  if (req.method === 'DELETE') {
-    const { id } = req.body;
-    const idx = customers.findIndex(c => c.id === id);
-    if (idx === -1) return res.status(404).json({ error: 'Not found' });
-    customers.splice(idx, 1);
-    await ghPut(FILE, customers, sha);
-    return res.status(200).json({ success: true });
-  }
-
-  res.status(405).json({ error: 'Method not allowed' });
+  return res.status(200).json(customers);
 }
