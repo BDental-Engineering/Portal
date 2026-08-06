@@ -91,6 +91,43 @@ async function getSession(req) {
   return r.json();
 }
 
+// ── NORMALISE ATTACHMENT ──────────────────────────────────────────────────────
+function normaliseAttachment(a, sourceType, job) {
+  const fileUrl = a.uuid
+    ? 'https://api.servicem8.com/api_1.0/attachment/' + a.uuid + '/file'
+    : null;
+
+  let type = 'File';
+  const src = (a.attachment_source || '').toUpperCase();
+  const ext = (a.file_type || '').toLowerCase();
+  if (src === 'INVOICE')         type = 'Invoice';
+  else if (src === 'QUOTE')      type = 'Quote';
+  else if (src === 'WORKORDER')  type = 'Work Order';
+  else if (src === 'FORM')       type = 'Form';
+  else if (src === 'REPORT')     type = 'Report';
+  else if (['.jpg','.jpeg','.png','.gif','.webp'].includes(ext)) type = 'Photo';
+  else if (ext === '.pdf')       type = 'PDF';
+
+  return {
+    uuid:           a.uuid,
+    name:           a.attachment_name || a.name || 'Untitled',
+    type:           type,
+    source:         sourceType,
+    file_type:      a.file_type || '',
+    file_url:       fileUrl,
+    tags:           a.tags || '',
+    is_favourite:   a.is_favourite === 1,
+    date:           a.timestamp || a.edit_date || null,
+    created_by:     a.created_by_staff_uuid || null,
+    job_uuid:       job ? job.uuid              : null,
+    job_number:     job ? job.generated_job_id  : null,
+    job_status:     job ? job.status            : null,
+    job_desc:       job ? (job.job_description || job.name || '') : null,
+    extracted_info: a.extracted_info || null,
+    metadata:       a.metadata || null
+  };
+}
+
 // ── HANDLER ──────────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
   const session = await getSession(req);
@@ -123,19 +160,19 @@ export default async function handler(req, res) {
       const byName = {};
       fieldArray.forEach(f => { byName[f.fieldName] = f.fieldValue; });
       return {
-        uuid: a.uuid,
-        name: a.name || 'Unnamed Asset',
-        active: a.active,
-        company_uuid: a.company_uuid,
-        asset_type_name: typeMap[a.asset_type_uuid] || null,
-        make: byName['Make'] || null,
-        model: byName['Model'] || null,
-        serial: byName['Serial Number'] || null,
-        location: byName['Location'] || null,
-        service_due: byName['Service Due'] || null,
-        warranty_end: byName['Warranty End Date'] || null,
-        compliance: byName['Compliance'] || null,
-        fields: fieldArray
+        uuid:             a.uuid,
+        name:             a.name || 'Unnamed Asset',
+        active:           a.active,
+        company_uuid:     a.company_uuid,
+        asset_type_name:  typeMap[a.asset_type_uuid] || null,
+        make:             byName['Make'] || null,
+        model:            byName['Model'] || null,
+        serial:           byName['Serial Number'] || null,
+        location:         byName['Location'] || null,
+        service_due:      byName['Service Due'] || null,
+        warranty_end:     byName['Warranty End Date'] || null,
+        compliance:       byName['Compliance'] || null,
+        fields:           fieldArray
           .slice()
           .sort((x, y) => (x.sortOrder || 0) - (y.sortOrder || 0))
           .map(f => ({ name: f.fieldName, value: f.fieldValue }))
@@ -153,14 +190,14 @@ export default async function handler(req, res) {
     if (!companies) return res.status(500).json({ error: 'Failed to load customers' });
 
     return res.status(200).json(companies.map(c => ({
-      id: c.uuid,
-      name: c.name,
-      email: c.email || '',
-      phone: c.phone || '',
+      id:      c.uuid,
+      name:    c.name,
+      email:   c.email || '',
+      phone:   c.phone || '',
       address: c.address ||
         [c.address_street, c.address_city, c.address_state, c.address_postcode]
           .filter(Boolean).join(', '),
-      active: c.active === 1
+      active:  c.active === 1
     })));
   }
 
@@ -173,12 +210,12 @@ export default async function handler(req, res) {
 
     const { make, model, tag } = req.query;
     let manuals = articles.map(a => ({
-      id: a.uuid,
-      title: a.name,
-      content: a.content || null,
+      id:           a.uuid,
+      title:        a.name,
+      content:      a.content || null,
       article_type: a.article_type || 'richtext',
-      tags: a.tags ? a.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
-      active: a.active
+      tags:         a.tags ? a.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+      active:       a.active
     }));
 
     if (make)  manuals = manuals.filter(m => m.tags.some(t => t.toLowerCase() === make.toLowerCase()));
@@ -205,11 +242,14 @@ export default async function handler(req, res) {
       if (!title || !customerId || !fileUrl)
         return res.status(400).json({ error: 'title, customerId and fileUrl required' });
       const rec = {
-        id: crypto.randomUUID(), customerId,
-        assetId: assetId || null, title,
-        type: type || 'Other', fileUrl,
+        id:         crypto.randomUUID(),
+        customerId,
+        assetId:    assetId || null,
+        title,
+        type:       type || 'Other',
+        fileUrl,
         uploadedAt: new Date().toISOString(),
-        active: active !== false
+        active:     active !== false
       };
       docs.push(rec);
       await ghPut('data/portal_documents.json', docs, sha);
@@ -240,17 +280,9 @@ export default async function handler(req, res) {
     if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
     const { companyId } = req.query;
-
-    // non-admins can only see their own company
-    const targetCompanyId = isAdmin
-      ? (companyId || null)
-      : companyUuid;
-
+    const targetCompanyId = isAdmin ? (companyId || null) : companyUuid;
     if (!targetCompanyId) return res.status(400).json({ error: 'companyId required' });
 
-    // fetch in parallel:
-    // 1. attachments directly on the company record
-    // 2. all jobs for this company (so we can get their UUIDs)
     const [companyAttachments, jobs] = await Promise.all([
       sm8Get('attachment.json?%24filter=related_object_uuid%20eq%20' + targetCompanyId),
       sm8Get('job.json?%24filter=company_uuid%20eq%20' + targetCompanyId)
@@ -258,18 +290,13 @@ export default async function handler(req, res) {
 
     const results = [];
 
-    // ── company-level attachments
     if (companyAttachments) {
       companyAttachments
         .filter(a => a.active === 1 && (a.attachment_source || '').toUpperCase() === 'FORM')
-        .forEach(a => {
-          results.push(normaliseAttachment(a, 'company', null));
-        });
+        .forEach(a => results.push(normaliseAttachment(a, 'company', null)));
     }
 
-    // ── job-level attachments — fetch all in parallel (capped to avoid timeout)
     if (jobs && jobs.length) {
-      // only fetch jobs that are active and limit to 50 most recent to avoid timeout
       const activeJobs = jobs
         .filter(j => j.active === 1)
         .sort((a, b) => new Date(b.edit_date || 0) - new Date(a.edit_date || 0))
@@ -285,59 +312,99 @@ export default async function handler(req, res) {
 
       jobAttachmentArrays.forEach(({ job, atts }) => {
         atts
-          .filter(a => a.active === 1)
-          .forEach(a => {
-            results.push(normaliseAttachment(a, 'job', job));
-          });
+          .filter(a => a.active === 1 && (a.attachment_source || '').toUpperCase() === 'FORM')
+          .forEach(a => results.push(normaliseAttachment(a, 'job', job)));
       });
     }
 
-    // sort all results newest first
     results.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
     return res.status(200).json(results);
   }
 
+  // ── ATTACHMENTS DEBUG ──────────────────────────────────────────────────────
+  if (resource === 'attachments-debug') {
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+
+    const { assetId } = req.query;
+    if (!assetId) return res.status(400).json({ error: 'assetId required' });
+
+    // security: non-admins can only debug assets belonging to their company
+    if (!isAdmin) {
+      const assetList = await sm8Get('asset.json?%24filter=company_uuid%20eq%20' + companyUuid);
+      if (!assetList || !assetList.find(a => a.uuid === assetId)) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
+    }
+
+    // fetch attachments directly linked to the asset UUID
+    const atts = await sm8Get(
+      'attachment.json?%24filter=related_object_uuid%20eq%20' + encodeURIComponent(assetId)
+    );
+
+    console.log('[DEBUG] attachments-debug for asset', assetId, '→', atts ? atts.length : 'null', 'results');
+
+    // collect unique job UUIDs referenced by these attachments
+    let jobMap = {};
+    if (atts && atts.length) {
+      const jobUuids = [...new Set(
+        atts
+          .filter(a => (a.related_object || '').toLowerCase() === 'job')
+          .map(a => a.related_object_uuid)
+          .filter(Boolean)
+      )];
+
+      const jobResults = await Promise.all(
+        jobUuids.map(jid =>
+          sm8Get('job/' + jid + '.json')
+            .then(j => j
+              ? { uuid: jid, number: j.generated_job_id, desc: j.job_description, status: j.status }
+              : { uuid: jid }
+            )
+            .catch(() => ({ uuid: jid }))
+        )
+      );
+      jobResults.forEach(j => { jobMap[j.uuid] = j; });
+    }
+
+    // return all raw fields plus enriched job context
+    const enriched = (atts || []).map(a => {
+      const job = jobMap[a.related_object_uuid] || null;
+      return {
+        // all raw SM8 fields
+        uuid:              a.uuid,
+        active:            a.active,
+        edit_date:         a.edit_date,
+        timestamp:         a.timestamp,
+        created_by_staff_uuid: a.created_by_staff_uuid,
+        related_object:    a.related_object,
+        related_object_uuid: a.related_object_uuid,
+        attachment_name:   a.attachment_name,
+        file_type:         a.file_type,
+        attachment_source: a.attachment_source,
+        class_name:        a.class_name,
+        tags:              a.tags,
+        is_favourite:      a.is_favourite,
+        lat:               a.lat,
+        lng:               a.lng,
+        photo_width:       a.photo_width,
+        photo_height:      a.photo_height,
+        extracted_info:    a.extracted_info,
+        metadata:          a.metadata,
+        signature_data:    a.signature_data,
+        // enriched job context
+        _job_uuid:         job ? job.uuid   : null,
+        _job_number:       job ? job.number : null,
+        _job_status:       job ? job.status : null,
+        _job_desc:         job ? job.desc   : null
+      };
+    });
+
+    enriched.forEach((a, i) => {
+      console.log('[DEBUG] att#' + (i + 1), JSON.stringify(a));
+    });
+
+    return res.status(200).json(enriched);
+  }
+
   return res.status(400).json({ error: 'Unknown resource' });
-}
-
-// ── NORMALISE ATTACHMENT ──────────────────────────────────────────────────────
-function normaliseAttachment(a, sourceType, job) {
-  // build a readable URL — ServiceM8 attachment files are served from their CDN
-  const fileUrl = a.uuid
-    ? 'https://api.servicem8.com/api_1.0/attachment/' + a.uuid + '/file'
-    : null;
-
-  // determine a display type from attachment_source or file_type
-  let type = 'File';
-  const src = (a.attachment_source || '').toUpperCase();
-  const ext = (a.file_type || '').toLowerCase();
-  if (src === 'INVOICE')         type = 'Invoice';
-  else if (src === 'QUOTE')      type = 'Quote';
-  else if (src === 'WORKORDER')  type = 'Work Order';
-  else if (src === 'FORM')       type = 'Form';
-  else if (src === 'REPORT')     type = 'Report';
-  else if (['.jpg','.jpeg','.png','.gif','.webp'].includes(ext)) type = 'Photo';
-  else if (ext === '.pdf')       type = 'PDF';
-
-  return {
-    uuid:          a.uuid,
-    name:          a.attachment_name || 'Untitled',
-    type:          type,
-    source:        sourceType,           // 'company' or 'job'
-    file_type:     a.file_type || '',
-    file_url:      fileUrl,
-    tags:          a.tags || '',
-    is_favourite:  a.is_favourite === 1,
-    date:          a.timestamp || a.edit_date || null,
-    created_by:    a.created_by_staff_uuid || null,
-    // job context (null for company-level attachments)
-    job_uuid:      job ? job.uuid       : null,
-    job_number:    job ? job.generated_job_id : null,
-    job_status:    job ? job.status     : null,
-    job_desc:      job ? (job.job_description || job.name || '') : null,
-    // extra info extracted from the file if available
-    extracted_info: a.extracted_info || null,
-    metadata:       a.metadata || null
-  };
 }
