@@ -1014,7 +1014,7 @@ function openAssetDetail(assetId) {
   currentAsset = null;
   for (var i = 0; i < assets.length; i++) {
     if ((assets[i].uuid === assetId || assets[i].id === assetId)) {
-      currentAsset = assets[i]; break;
+      currentAsset = assets[i]; debugAssetAttachments(assets[i].uuid); break;
     }
   }
   if (!currentAsset) return;
@@ -1243,7 +1243,34 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeAssetDetail();
 });
 
+async function debugAssetAttachments(assetId) {
+  console.log('%c[DEBUG] Fetching attachments for asset: ' + assetId, 'color:cyan;font-weight:bold');
 
+  var r = await api('/api/portal-data?resource=attachments-debug&assetId=' + encodeURIComponent(assetId));
+
+  if (!r.ok) {
+    console.error('[DEBUG] Failed:', r.data);
+    return;
+  }
+
+  var atts = Array.isArray(r.data) ? r.data : [];
+  console.log('%c[DEBUG] Total attachments returned: ' + atts.length, 'color:lime;font-weight:bold');
+
+  if (atts.length === 0) {
+    console.warn('[DEBUG] No attachments found with related_object_uuid = ' + assetId);
+    return;
+  }
+
+  atts.forEach(function(a, i) {
+    console.group('%c[DEBUG] Attachment #' + (i + 1), 'color:orange');
+    Object.keys(a).forEach(function(k) {
+      console.log(k + ':', a[k]);
+    });
+    console.groupEnd();
+  });
+}
+
+  
 </script>
   <!-- ASSET DETAIL BACKDROP -->
 <div class="detail-backdrop" id="detailBackdrop" onclick="closeAssetDetail()"></div>
