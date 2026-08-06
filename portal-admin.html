@@ -157,7 +157,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 </div>
 
 <div class="stats">
-  <div class="stat-card"><div class="stat-label">Customers</div><div class="stat-val" id="statCustomers">—</div></div>
+  <div class="stat-card"><div class="stat-label">Sites</div><div class="stat-val" id="statCustomers">—</div></div>
   <div class="stat-card"><div class="stat-label">Assets</div><div class="stat-val" id="statAssets">—</div></div>
   <div class="stat-card"><div class="stat-label">Documents</div><div class="stat-val" id="statDocs">—</div></div>
   <div class="stat-card"><div class="stat-label">Manuals</div><div class="stat-val" id="statManuals">—</div></div>
@@ -165,7 +165,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <div class="tabs-wrap">
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('customers')">Customers</button>
+    <button class="tab active" onclick="switchTab('customers')">Sites</button>
     <button class="tab" onclick="switchTab('assets')">Assets</button>
     <button class="tab" onclick="switchTab('documents')">Documents</button>
     <button class="tab" onclick="switchTab('manuals')">Manuals</button>
@@ -175,11 +175,11 @@ tr:hover td{background:rgba(255,255,255,.02)}
 
 <!-- CUSTOMERS PANEL -->
 <div class="panel active" id="panel-customers">
-  <div class="sm8-note" id="custNote">ℹ️ Customers are read from <strong>ServiceM8</strong>. To add or edit, use your <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.</div>
+  <div class="sm8-note" id="custNote">ℹ️ Sites are read from <strong>B Dental Engineering Ltd Database</strong>. To add or edit, use your <a href="https://app.servicem8.com" target="_blank">ServiceM8 account</a>.</div>
   <div class="toolbar" id="custToolbar">
     <div class="search-wrap">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="custSearch" placeholder="Search customers…" oninput="renderCustomers()"/>
+      <input type="text" id="custSearch" placeholder="Search sites…" oninput="renderCustomers()"/>
     </div>
     <select class="filter" id="custStatusFilter" onchange="renderCustomers()">
       <option value="">All</option>
@@ -198,7 +198,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
     <div class="asset-header">
       <button class="btn-back" onclick="closeCustomerAssets()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        All Customers
+        All Sites
       </button>
       <div class="asset-header-info">
         <div class="asset-header-title" id="custAssetTitle"></div>
@@ -613,8 +613,7 @@ function renderCustomers() {
   });
   var grid = document.getElementById('custGrid');
   if (!rows.length) {
-    grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No customers found</div>';
-    return;
+    grid.innerHTML = '<div class="empty" style="grid-column:1/-1"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>No sites found</div>';
   }
   var html = '';
   for (var i = 0; i < rows.length; i++) {
