@@ -1212,26 +1212,13 @@ function renderDiaryEntries(entries) {
 
   
 async function loadAssetDiary(assetId) {
-  // find the company for this asset
-  var companyId = '';
-  for (var i = 0; i < assets.length; i++) {
-    if (assets[i].uuid === assetId || assets[i].id === assetId) {
-      companyId = assets[i].company_uuid || '';
-      break;
-    }
-  }
-  var url = '/api/portal-data?resource=attachments';
-  if (companyId) url += '&companyId=' + encodeURIComponent(companyId);
-
-  var r = await api(url);
+  var r = await api('/api/portal-data?resource=attachments&assetId=' + encodeURIComponent(assetId));
   var entries = [];
   if (r.ok) {
-   entries = (Array.isArray(r.data) ? r.data : []).filter(function(e) {
-  return e.type === 'Form';
-});
-    dlog('Attachments: ' + entries.length, 'ok');
+    entries = Array.isArray(r.data) ? r.data : [];
+    dlog('Asset forms: ' + entries.length, 'ok');
   } else {
-    dlog('Failed to load attachments: ' + (r.data && r.data.error), 'err');
+    dlog('Failed to load asset forms: ' + (r.data && r.data.error), 'err');
   }
   var container = document.getElementById('diaryContainer');
   if (container) container.innerHTML = renderDiaryEntries(entries);
