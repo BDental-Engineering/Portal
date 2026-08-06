@@ -1139,18 +1139,102 @@ function renderDiaryEntries(diary) {
   return html;
 }
 
+function renderDiaryEntries(entries) {
+  if (!entries.length) return '<div class="detail-empty">No diary entries found</div>';
+  var typeColors = {
+    'Invoice':    'badge-amber',
+    'Quote':      'badge-blue',
+    'Work Order': 'badge-blue',
+    'Form':       'badge-muted',
+    'Report':     'badge-green',
+    'Photo':      'badge-muted',
+    'PDF':        'badge-amber',
+    'File':       'badge-muted'
+  };
+  var html = '';
+  for (var i = 0; i < entries.length; i++) {
+    var e = entries[i];
+    var typeClass = typeColors[e.type] || 'badge-muted';
+    html += '<div class="diary-entry">';
+
+    // header row
+    html += '<div class="diary-entry-header">';
+    html += '<span class="diary-entry-type badge ' + typeClass + '">' + esc(e.type) + '</span>';
+    if (e.source === 'job' && e.job_number) {
+      html += '<span style="font-size:.7rem;color:var(--accent)">Job #' + esc(e.job_number) + '</span>';
+    }
+    html += '<span class="diary-entry-date">' + fmtDate(e.date) + '</span>';
+    html += '</div>';
+
+    // name / description
+    html += '<div class="diary-entry-note"><strong>' + esc(e.name) + '</strong></div>';
+
+    // job description if present
+    if (e.job_desc) {
+      html += '<div class="diary-entry-note" style="margin-top:.35rem;color:var(--muted)">' + esc(e.job_desc) + '</div>';
+    }
+
+    // tags
+    if (e.tags) {
+      html += '<div style="margin-top:.4rem">';
+      var tags = e.tags.split(',');
+      for (var j = 0; j < tags.length; j++) {
+        if (tags[j].trim()) {
+          html += '<span class="badge badge-muted" style="margin-right:3px;font-size:.65rem">' + esc(tags[j].trim()) + '</span>';
+        }
+      }
+      html += '</div>';
+    }
+
+    // extracted info
+    if (e.extracted_info) {
+      html += '<div class="diary-entry-note" style="margin-top:.4rem;font-size:.78rem;color:var(--muted)">' + esc(e.extracted_info) + '</div>';
+    }
+
+    // download link
+    if (e.file_url) {
+      html += '<div style="margin-top:.6rem">';
+      html += '<a href="' + esc(e.file_url) + '" target="_blank" style="font-size:.78rem;color:var(--accent);text-decoration:none;display:inline-flex;align-items:center;gap:.3rem">';
+      html += '⬇ View ' + esc(e.file_type || 'file');
+      html += '</a>';
+      html += '</div>';
+    }
+
+    // job status pill
+    if (e.job_status) {
+      html += '<div class="diary-entry-tech" style="margin-top:.5rem">Status: ' + esc(e.job_status) + '</div>';
+    }
+
+    html += '</div>';
+  }
+  return html;
+}
+
+  
 async function loadAssetDiary(assetId) {
-  var r = await api('/api/portal-data?resource=asset-diary&assetId=' + encodeURIComponent(assetId));
-  var diary = [];
+  // find the company for this asset
+  var companyId = '';
+  for (var i = 0; i < assets.length; i++) {
+    if (assets[i].uuid === assetId || assets[i].id === assetId) {
+      companyId = assets[i].company_uuid || '';
+      break;
+    }
+  }
+  var url = '/api/portal-data?resource=attachments';
+  if (companyId) url += '&companyId=' + encodeURIComponent(companyId);
+
+  var r = await api(url);
+  var entries = [];
   if (r.ok) {
-    diary = Array.isArray(r.data) ? r.data : (r.data.diary || []);
-    dlog('Diary entries: ' + diary.length, 'ok');
+    entries = Array.isArray(r.data) ? r.data : [];
+    dlog('Attachments: ' + entries.length, 'ok');
   } else {
-    dlog('Failed to load diary', 'err');
+    dlog('Failed to load attachments: ' + (r.data && r.data.error), 'err');
   }
   var container = document.getElementById('diaryContainer');
-  if (container) container.innerHTML = renderDiaryEntries(diary);
+  if (container) container.innerHTML = renderDiaryEntries(entries);
 }
+
 
 // close detail on Escape key
 document.addEventListener('keydown', function(e) {
