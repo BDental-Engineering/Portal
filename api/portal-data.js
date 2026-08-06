@@ -69,9 +69,8 @@ async function ghPut(path, data, sha) {
   return r.ok;
 }
 
-// ── AUTH — validate by calling portal-auth directly ──────────────────────────
+// ── AUTH ─────────────────────────────────────────────────────────────────────
 async function getSession(req) {
-  // Forward the cookie header to portal-auth and trust its response
   const proto = req.headers['x-forwarded-proto'] || 'https';
   const host  = req.headers['x-forwarded-host'] || req.headers.host;
   const url   = `${proto}://${host}/api/portal-auth`;
@@ -89,7 +88,7 @@ async function getSession(req) {
   console.log('getSession: portal-auth responded', r.status);
 
   if (!r.ok) return null;
-  return r.json(); // { ok, userId, role, customerId, name }
+  return r.json();
 }
 
 // ── HANDLER ──────────────────────────────────────────────────────────────────
@@ -98,7 +97,7 @@ export default async function handler(req, res) {
   if (!session) return res.status(401).json({ error: 'Not authenticated' });
 
   const { resource } = req.query;
-  const isAdmin    = session.role === 'admin';
+  const isAdmin     = session.role === 'admin';
   const companyUuid = session.customerId;
 
   console.log('portal-data: resource=' + resource + ' role=' + session.role);
@@ -236,5 +235,109 @@ export default async function handler(req, res) {
     }
   }
 
+  // ── ATTACHMENTS / SITE DIARY ───────────────────────────────────────────────
+  if (resource === 'attachments') {
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+
+    const { companyId } = req.query;
+
+    // non-admins can only see their own company
+    const targetCompanyId = isAdmin
+      ? (companyId || null)
+      : companyUuid;
+
+    if (!targetCompanyId) return res.status(400).json({ error: 'companyId required' });
+
+    // fetch in parallel:
+    // 1. attachments directly on the company record
+    // 2. all jobs for this company (so we can get their UUIDs)
+    const [companyAttachments, jobs] = await Promise.all([
+      sm8Get('attachment.json?%24filter=related_object_uuid%20eq%20' + targetCompanyId),
+      sm8Get('job.json?%24filter=company_uuid%20eq%20' + targetCompanyId)
+    ]);
+
+    const results = [];
+
+    // ── company-level attachments
+    if (companyAttachments) {
+      companyAttachments
+        .filter(a => a.active === 1)
+        .forEach(a => {
+          results.push(normaliseAttachment(a, 'company', null));
+        });
+    }
+
+    // ── job-level attachments — fetch all in parallel (capped to avoid timeout)
+    if (jobs && jobs.length) {
+      // only fetch jobs that are active and limit to 50 most recent to avoid timeout
+      const activeJobs = jobs
+        .filter(j => j.active === 1)
+        .sort((a, b) => new Date(b.edit_date || 0) - new Date(a.edit_date || 0))
+        .slice(0, 50);
+
+      const jobAttachmentArrays = await Promise.all(
+        activeJobs.map(j =>
+          sm8Get('attachment.json?%24filter=related_object_uuid%20eq%20' + j.uuid)
+            .then(atts => ({ job: j, atts: atts || [] }))
+            .catch(() => ({ job: j, atts: [] }))
+        )
+      );
+
+      jobAttachmentArrays.forEach(({ job, atts }) => {
+        atts
+          .filter(a => a.active === 1)
+          .forEach(a => {
+            results.push(normaliseAttachment(a, 'job', job));
+          });
+      });
+    }
+
+    // sort all results newest first
+    results.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    return res.status(200).json(results);
+  }
+
   return res.status(400).json({ error: 'Unknown resource' });
+}
+
+// ── NORMALISE ATTACHMENT ──────────────────────────────────────────────────────
+function normaliseAttachment(a, sourceType, job) {
+  // build a readable URL — ServiceM8 attachment files are served from their CDN
+  const fileUrl = a.uuid
+    ? 'https://api.servicem8.com/api_1.0/attachment/' + a.uuid + '/file'
+    : null;
+
+  // determine a display type from attachment_source or file_type
+  let type = 'File';
+  const src = (a.attachment_source || '').toUpperCase();
+  const ext = (a.file_type || '').toLowerCase();
+  if (src === 'INVOICE')         type = 'Invoice';
+  else if (src === 'QUOTE')      type = 'Quote';
+  else if (src === 'WORKORDER')  type = 'Work Order';
+  else if (src === 'FORM')       type = 'Form';
+  else if (src === 'REPORT')     type = 'Report';
+  else if (['.jpg','.jpeg','.png','.gif','.webp'].includes(ext)) type = 'Photo';
+  else if (ext === '.pdf')       type = 'PDF';
+
+  return {
+    uuid:          a.uuid,
+    name:          a.attachment_name || 'Untitled',
+    type:          type,
+    source:        sourceType,           // 'company' or 'job'
+    file_type:     a.file_type || '',
+    file_url:      fileUrl,
+    tags:          a.tags || '',
+    is_favourite:  a.is_favourite === 1,
+    date:          a.timestamp || a.edit_date || null,
+    created_by:    a.created_by_staff_uuid || null,
+    // job context (null for company-level attachments)
+    job_uuid:      job ? job.uuid       : null,
+    job_number:    job ? job.generated_job_id : null,
+    job_status:    job ? job.status     : null,
+    job_desc:      job ? (job.job_description || job.name || '') : null,
+    // extra info extracted from the file if available
+    extracted_info: a.extracted_info || null,
+    metadata:       a.metadata || null
+  };
 }
