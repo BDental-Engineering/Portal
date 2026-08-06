@@ -78,6 +78,36 @@ select.filter{background:var(--surface2);border:1px solid var(--border);border-r
 .due-ok{background:rgba(34,197,94,.15);color:var(--green)}
 .due-none{background:rgba(136,146,176,.1);color:var(--muted)}
 .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:auto}
+/* ASSET DETAIL PANEL */
+.detail-panel{position:fixed;top:0;right:0;width:480px;max-width:100vw;height:100vh;background:var(--surface);border-left:1px solid var(--border);z-index:300;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.detail-panel.open{transform:none}
+.detail-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:299;display:none}
+.detail-backdrop.open{display:block}
+.detail-header{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:1rem;flex-shrink:0}
+.detail-close{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:.4rem .7rem;cursor:pointer;color:var(--muted);font-size:1.1rem;line-height:1;transition:all .2s;flex-shrink:0}
+.detail-close:hover{border-color:var(--red);color:var(--red)}
+.detail-header-info{flex:1;min-width:0}
+.detail-header-title{font-weight:800;font-size:1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail-header-sub{font-size:.78rem;color:var(--muted);margin-top:.15rem}
+.detail-body{flex:1;overflow-y:auto;padding:1.5rem}
+.detail-section{margin-bottom:1.75rem}
+.detail-section-title{font-size:.7rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem}
+.detail-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.detail-field{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:.75rem}
+.detail-field.full{grid-column:1/-1}
+.detail-field-label{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
+.detail-field-val{font-size:.875rem;color:var(--text);word-break:break-word}
+.detail-field-val.mono{font-family:monospace;font-size:.8rem}
+.diary-entry{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:.75rem;position:relative}
+.diary-entry:last-child{margin-bottom:0}
+.diary-entry-header{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;margin-bottom:.6rem}
+.diary-entry-date{font-size:.72rem;color:var(--muted);white-space:nowrap}
+.diary-entry-type{font-size:.68rem;font-weight:700;padding:.15rem .5rem;border-radius:20px}
+.diary-entry-note{font-size:.83rem;color:var(--text);line-height:1.55}
+.diary-entry-tech{font-size:.72rem;color:var(--muted);margin-top:.5rem}
+.detail-loading{text-align:center;padding:2rem;color:var(--muted);font-size:.875rem}
+.detail-empty{text-align:center;padding:1.5rem;color:var(--muted);font-size:.83rem}
 table{width:100%;border-collapse:collapse;min-width:600px}
 thead{background:var(--surface2)}
 th{padding:.85rem 1rem;text-align:left;font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);white-space:nowrap}
@@ -743,7 +773,7 @@ function renderAssetKanban(gridId, rows, showCustomer) {
         if (customers[j].id === a.company_uuid) { custName = customers[j].name; break; }
       }
     }
-    html += '<div class="asset-card ' + (active ? 'active-asset' : 'inactive-asset') + '">';
+    html += '<div class="asset-card ' + (active ? 'active-asset' : 'inactive-asset') + '" onclick="openAssetDetail(\'' + esc(a.uuid || a.id || '') + '\')" style="cursor:pointer">';
     html += '<div class="asset-card-top">';
     html += '<div class="asset-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>';
     html += '<span class="badge ' + (active ? 'badge-green' : 'badge-red') + '">' + (active ? 'Active' : 'Inactive') + '</span>';
@@ -976,6 +1006,174 @@ async function signOut() {
   await api('/api/portal-auth','POST',{action:'logout'});
   location.href = 'portal-login.html';
 }
+
+// ── ASSET DETAIL PANEL ─────────────────────────────────
+var currentAsset = null;
+
+function openAssetDetail(assetId) {
+  currentAsset = null;
+  for (var i = 0; i < assets.length; i++) {
+    if ((assets[i].uuid === assetId || assets[i].id === assetId)) {
+      currentAsset = assets[i]; break;
+    }
+  }
+  if (!currentAsset) return;
+
+  var active = currentAsset.active === 1 || currentAsset.active === '1';
+
+  document.getElementById('detailTitle').textContent = currentAsset.name || 'Unnamed Asset';
+  document.getElementById('detailSub').textContent   = currentAsset.asset_type_name || '';
+
+  var badge = document.getElementById('detailStatusBadge');
+  badge.textContent  = active ? 'Active' : 'Inactive';
+  badge.className    = 'badge ' + (active ? 'badge-green' : 'badge-red');
+
+  document.getElementById('detailBody').innerHTML = '<div class="detail-loading">Loading…</div>';
+  document.getElementById('detailPanel').classList.add('open');
+  document.getElementById('detailBackdrop').classList.add('open');
+
+  renderAssetDetailBody(currentAsset, []);
+  loadAssetDiary(assetId);
+}
+
+function closeAssetDetail() {
+  document.getElementById('detailPanel').classList.remove('open');
+  document.getElementById('detailBackdrop').classList.remove('open');
+  currentAsset = null;
+}
+
+function renderAssetDetailBody(a, diary) {
+  var active = a.active === 1 || a.active === '1';
+  var html = '';
+
+  // ── OVERVIEW
+  html += '<div class="detail-section">';
+  html += '<div class="detail-section-title">Overview</div>';
+  html += '<div class="detail-grid">';
+  html += detailField('Asset Name',  a.name          || '—', false);
+  html += detailField('Type',        a.asset_type_name || '—', false);
+  html += detailField('Make',        a.make          || '—', false);
+  html += detailField('Model',       a.model         || '—', false);
+  html += detailField('Serial No.',  a.serial        || '—', true);
+  html += detailField('Location',    a.location      || '—', false);
+  if (a.description) html += detailField('Description', a.description, false, true);
+  html += '</div></div>';
+
+  // ── SERVICE
+  html += '<div class="detail-section">';
+  html += '<div class="detail-section-title">Service</div>';
+  html += '<div class="detail-grid">';
+  html += detailField('Service Due',    a.service_due    || '—', false);
+  html += detailField('Last Serviced',  a.last_service   || '—', false);
+  html += detailField('Service Interval', a.service_interval ? a.service_interval + ' days' : '—', false);
+  html += detailField('Warranty End',   a.warranty_end   || '—', false);
+  html += '</div></div>';
+
+  // ── PURCHASE
+  if (a.purchase_date || a.purchase_price || a.supplier) {
+    html += '<div class="detail-section">';
+    html += '<div class="detail-section-title">Purchase</div>';
+    html += '<div class="detail-grid">';
+    if (a.purchase_date)  html += detailField('Purchase Date',  a.purchase_date,  false);
+    if (a.purchase_price) html += detailField('Purchase Price', a.purchase_price, false);
+    if (a.supplier)       html += detailField('Supplier',       a.supplier,       false);
+    html += '</div></div>';
+  }
+
+  // ── NOTES
+  if (a.notes) {
+    html += '<div class="detail-section">';
+    html += '<div class="detail-section-title">Notes</div>';
+    html += '<div class="detail-field full"><div class="detail-field-val">' + esc(a.notes) + '</div></div>';
+    html += '</div>';
+  }
+
+  // ── DIARY
+  html += '<div class="detail-section">';
+  html += '<div class="detail-section-title">Asset Diary</div>';
+  html += '<div id="diaryContainer">';
+  if (diary.length === 0) {
+    html += '<div class="detail-loading">Loading diary…</div>';
+  } else {
+    html += renderDiaryEntries(diary);
+  }
+  html += '</div>';
+  html += '</div>';
+
+  document.getElementById('detailBody').innerHTML = html;
+}
+
+function detailField(label, val, mono, full) {
+  var cls = 'detail-field' + (full ? ' full' : '');
+  var valCls = 'detail-field-val' + (mono ? ' mono' : '');
+  return '<div class="' + cls + '"><div class="detail-field-label">' + esc(label) + '</div><div class="' + valCls + '">' + esc(val) + '</div></div>';
+}
+
+function renderDiaryEntries(diary) {
+  if (!diary.length) return '<div class="detail-empty">No diary entries found</div>';
+  var typeColors = {
+    service:     'badge-green',
+    repair:      'badge-red',
+    inspection:  'badge-blue',
+    note:        'badge-muted',
+    warranty:    'badge-amber'
+  };
+  var html = '';
+  for (var i = 0; i < diary.length; i++) {
+    var e = diary[i];
+    var typeKey = (e.type || 'note').toLowerCase();
+    var typeClass = typeColors[typeKey] || 'badge-muted';
+    html += '<div class="diary-entry">';
+    html += '<div class="diary-entry-header">';
+    html += '<span class="diary-entry-type badge ' + typeClass + '">' + esc(e.type || 'Note') + '</span>';
+    html += '<span class="diary-entry-date">' + fmtDate(e.date || e.created_at) + '</span>';
+    html += '</div>';
+    if (e.note || e.description) {
+      html += '<div class="diary-entry-note">' + esc(e.note || e.description) + '</div>';
+    }
+    if (e.technician || e.staff_name) {
+      html += '<div class="diary-entry-tech">👤 ' + esc(e.technician || e.staff_name) + '</div>';
+    }
+    html += '</div>';
+  }
+  return html;
+}
+
+async function loadAssetDiary(assetId) {
+  var r = await api('/api/portal-data?resource=asset-diary&assetId=' + encodeURIComponent(assetId));
+  var diary = [];
+  if (r.ok) {
+    diary = Array.isArray(r.data) ? r.data : (r.data.diary || []);
+    dlog('Diary entries: ' + diary.length, 'ok');
+  } else {
+    dlog('Failed to load diary', 'err');
+  }
+  var container = document.getElementById('diaryContainer');
+  if (container) container.innerHTML = renderDiaryEntries(diary);
+}
+
+// close detail on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeAssetDetail();
+});
+
+
 </script>
+  <!-- ASSET DETAIL BACKDROP -->
+<div class="detail-backdrop" id="detailBackdrop" onclick="closeAssetDetail()"></div>
+
+<!-- ASSET DETAIL PANEL -->
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-header">
+    <button class="detail-close" onclick="closeAssetDetail()">×</button>
+    <div class="detail-header-info">
+      <div class="detail-header-title" id="detailTitle">Asset Detail</div>
+      <div class="detail-header-sub" id="detailSub"></div>
+    </div>
+    <span class="badge" id="detailStatusBadge"></span>
+  </div>
+  <div class="detail-body" id="detailBody"></div>
+</div>
+
 </body>
 </html>
