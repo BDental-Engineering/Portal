@@ -261,7 +261,7 @@ export default async function handler(req, res) {
     // ── company-level attachments
     if (companyAttachments) {
       companyAttachments
-        .filter(a => a.active === 1)
+        .filter(a => a.active === 1 && (a.attachment_source || '').toUpperCase() === 'FORM')
         .forEach(a => {
           results.push(normaliseAttachment(a, 'company', null));
         });
