@@ -1226,7 +1226,9 @@ async function loadAssetDiary(assetId) {
   var r = await api(url);
   var entries = [];
   if (r.ok) {
-    entries = Array.isArray(r.data) ? r.data : [];
+   entries = (Array.isArray(r.data) ? r.data : []).filter(function(e) {
+  return e.type === 'Form';
+});
     dlog('Attachments: ' + entries.length, 'ok');
   } else {
     dlog('Failed to load attachments: ' + (r.data && r.data.error), 'err');
