@@ -276,50 +276,76 @@ export default async function handler(req, res) {
   }
 
   // ── ATTACHMENTS / SITE DIARY ───────────────────────────────────────────────
-  if (resource === 'attachments') {
-    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+if (resource === 'attachments') {
+  if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-    const { companyId } = req.query;
-    const targetCompanyId = isAdmin ? (companyId || null) : companyUuid;
-    if (!targetCompanyId) return res.status(400).json({ error: 'companyId required' });
+  const { companyId, assetId } = req.query;
 
-    const [companyAttachments, jobs] = await Promise.all([
-      sm8Get('attachment.json?%24filter=related_object_uuid%20eq%20' + targetCompanyId),
-      sm8Get('job.json?%24filter=company_uuid%20eq%20' + targetCompanyId)
-    ]);
-
-    const results = [];
-
-    if (companyAttachments) {
-      companyAttachments
-        .filter(a => a.active === 1 && (a.attachment_source || '').toUpperCase() === 'FORM')
-        .forEach(a => results.push(normaliseAttachment(a, 'company', null)));
+  // ── ASSET-SPECIFIC MODE ──────────────────────────────────────────────────
+  if (assetId) {
+    // security: non-admins must own this asset
+    if (!isAdmin) {
+      const assetList = await sm8Get('asset.json?%24filter=company_uuid%20eq%20' + companyUuid);
+      if (!assetList || !assetList.find(a => a.uuid === assetId)) {
+        return res.status(403).json({ error: 'Forbidden' });
+      }
     }
 
-    if (jobs && jobs.length) {
-      const activeJobs = jobs
-        .filter(j => j.active === 1)
-        .sort((a, b) => new Date(b.edit_date || 0) - new Date(a.edit_date || 0))
-        .slice(0, 50);
+    // fetch attachments directly linked to the asset UUID — related_object = 'asset'
+    const assetAtts = await sm8Get(
+      'attachment.json?%24filter=related_object_uuid%20eq%20' + encodeURIComponent(assetId)
+    );
 
-      const jobAttachmentArrays = await Promise.all(
-        activeJobs.map(j =>
-          sm8Get('attachment.json?%24filter=related_object_uuid%20eq%20' + j.uuid)
-            .then(atts => ({ job: j, atts: atts || [] }))
-            .catch(() => ({ job: j, atts: [] }))
-        )
-      );
+    const results = (assetAtts || [])
+      .filter(a => a.active === 1 && (a.attachment_source || '').toUpperCase() === 'FORM')
+      .map(a => normaliseAttachment(a, 'asset', null))
+      .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
 
-      jobAttachmentArrays.forEach(({ job, atts }) => {
-        atts
-          .filter(a => a.active === 1 && (a.attachment_source || '').toUpperCase() === 'FORM')
-          .forEach(a => results.push(normaliseAttachment(a, 'job', job)));
-      });
-    }
-
-    results.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
     return res.status(200).json(results);
   }
+
+  // ── COMPANY/SITE MODE (existing behaviour) ───────────────────────────────
+  const targetCompanyId = isAdmin ? (companyId || null) : companyUuid;
+  if (!targetCompanyId) return res.status(400).json({ error: 'companyId or assetId required' });
+
+  const [companyAttachments, jobs] = await Promise.all([
+    sm8Get('attachment.json?%24filter=related_object_uuid%20eq%20' + targetCompanyId),
+    sm8Get('job.json?%24filter=company_uuid%20eq%20' + targetCompanyId)
+  ]);
+
+  const results = [];
+
+  if (companyAttachments) {
+    companyAttachments
+      .filter(a => a.active === 1 && (a.attachment_source || '').toUpperCase() === 'FORM')
+      .forEach(a => results.push(normaliseAttachment(a, 'company', null)));
+  }
+
+  if (jobs && jobs.length) {
+    const activeJobs = jobs
+      .filter(j => j.active === 1)
+      .sort((a, b) => new Date(b.edit_date || 0) - new Date(a.edit_date || 0))
+      .slice(0, 50);
+
+    const jobAttachmentArrays = await Promise.all(
+      activeJobs.map(j =>
+        sm8Get('attachment.json?%24filter=related_object_uuid%20eq%20' + j.uuid)
+          .then(atts => ({ job: j, atts: atts || [] }))
+          .catch(() => ({ job: j, atts: [] }))
+      )
+    );
+
+    jobAttachmentArrays.forEach(({ job, atts }) => {
+      atts
+        .filter(a => a.active === 1 && (a.attachment_source || '').toUpperCase() === 'FORM')
+        .forEach(a => results.push(normaliseAttachment(a, 'job', job)));
+    });
+  }
+
+  results.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+  return res.status(200).json(results);
+}
+
 
   // ── ATTACHMENTS DEBUG ──────────────────────────────────────────────────────
   if (resource === 'attachments-debug') {
