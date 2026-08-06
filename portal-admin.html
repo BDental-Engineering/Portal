@@ -465,10 +465,14 @@ var REFRESH_MS = 60000;
   }
   document.getElementById('adminName').textContent = session.name || '';
   dlog('Loading all data…', 'info');
-  await Promise.all([loadCustomers(), loadAssets(), loadDocuments(), loadManuals(), loadUsers()]);
-  updateStats();
-  dlog('All data loaded.', 'ok');
-  startRefresh();
+// customers and assets must be sequential so counts are correct on first render
+await loadCustomers();
+await loadAssets();
+// rest can be parallel
+await Promise.all([loadDocuments(), loadManuals(), loadUsers()]);
+updateStats();
+dlog('All data loaded.', 'ok');
+startRefresh();
 })();
 
 // ── API ────────────────────────────────────────────────
