@@ -477,7 +477,7 @@ var REFRESH_MS = 60000;
 // ── INIT ───────────────────────────────────────────────
 (async function() {
   dlog('Calling GET /api/portal-auth…', 'info');
-  var authRes = await fetch('/api/portal-auth', {
+  var authRes = await fetch('/api/portal-auth.php', {
     method: 'GET', credentials: 'include', headers: { 'Accept': 'application/json' }
   });
   dlog('portal-auth → ' + authRes.status, authRes.ok ? 'ok' : 'err');
@@ -525,7 +525,7 @@ async function api(url, method, body) {
 
 // ── LOAD ───────────────────────────────────────────────
 async function loadCustomers() {
-  var r = await api('/api/portal-data?resource=customers');
+  var r = await api('/api/portal-data.php?resource=customers');
   customers = r.ok && Array.isArray(r.data) ? r.data : [];
   dlog('Customers: ' + customers.length, r.ok ? 'ok' : 'err');
   renderCustomers();
@@ -533,7 +533,7 @@ async function loadCustomers() {
 }
 
 async function loadAssets() {
-  var r = await api('/api/portal-data?resource=assets');
+  var r = await api('/api/portal-data.php?resource=assets');
   assets = r.ok ? (r.data.assets || []) : [];
   dlog('Assets: ' + assets.length, r.ok ? 'ok' : 'err');
   renderAssets();
@@ -542,21 +542,21 @@ async function loadAssets() {
 }
 
 async function loadDocuments() {
-  var r = await api('/api/portal-data?resource=documents');
+  var r = await api('/api/portal-data.php?resource=documents');
   documents = r.ok && Array.isArray(r.data) ? r.data : [];
   dlog('Documents: ' + documents.length, r.ok ? 'ok' : 'err');
   renderDocuments();
 }
 
 async function loadManuals() {
-  var r = await api('/api/portal-data?resource=manuals');
+  var r = await api('/api/portal-data.php?resource=manuals');
   manuals = r.ok && Array.isArray(r.data) ? r.data : [];
   dlog('Manuals: ' + manuals.length, r.ok ? 'ok' : 'err');
   renderManuals();
 }
 
 async function loadUsers() {
-  var r = await api('/api/portal-users');
+  var r = await api('/api/portal-users.php');
   users = r.ok && Array.isArray(r.data) ? r.data : [];
   dlog('Users: ' + users.length, r.ok ? 'ok' : 'err');
   renderUsers();
@@ -921,7 +921,7 @@ async function saveDocument() {
   };
   if (!body.title||!body.customerId||!body.fileUrl) { toast('Title, customer and URL are required','error'); return; }
   var payload = id ? Object.assign({id:id},body) : body;
-  var r = await api('/api/portal-data?resource=documents', id?'PUT':'POST', payload);
+  var r = await api('/api/portal-data.php?resource=documents', id?'PUT':'POST', payload);
   if (r.ok) {
     toast('Document saved','success');
     closeModal('document');
@@ -970,7 +970,7 @@ async function saveUser() {
   if (!body.name||!body.email) { toast('Name and email are required','error'); return; }
   if (!id&&!pw) { toast('Password is required for new users','error'); return; }
   var payload = id ? Object.assign({id:id},body) : body;
-  var r = await api('/api/portal-users', id?'PUT':'POST', payload);
+  var r = await api('/api/portal-users.php', id?'PUT':'POST', payload);
   if (r.ok) {
     toast(id?'User updated':'User created','success');
     closeModal('user');
@@ -984,7 +984,7 @@ async function saveUser() {
   } else toast((r.data&&r.data.error)||'Error saving user','error');
 }
 async function toggleUserActive(id, active) {
-  var r = await api('/api/portal-users','PUT',{id:id,active:active});
+  var r = await api('/api/portal-users.php','PUT',{id:id,active:active});
   if (r.ok) { toast(active?'User activated':'User deactivated','success'); await loadUsers(); }
   else toast('Error updating user','error');
 }
@@ -993,7 +993,7 @@ async function toggleUserActive(id, active) {
 function deleteItem(type, id, name) {
   document.getElementById('confirmMsg').textContent = 'Delete "' + name + '"? This cannot be undone.';
   deleteCallback = async function() {
-    var r = await api('/api/portal-data?resource=documents','DELETE',{id:id});
+    var r = await api('/api/portal-data.php?resource=documents','DELETE',{id:id});
     if (r.ok) { toast('Document deleted','success'); closeModal('confirm'); await loadDocuments(); updateStats(); }
     else toast((r.data&&r.data.error)||'Delete failed','error');
   };
@@ -1003,7 +1003,7 @@ function confirmDeleteAction() { if (deleteCallback) deleteCallback(); }
 
 // ── SIGN OUT ───────────────────────────────────────────
 async function signOut() {
-  await api('/api/portal-auth','POST',{action:'logout'});
+  await api('/api/portal-auth.php','POST',{action:'logout'});
   location.href = 'portal-login.html';
 }
 
@@ -1212,7 +1212,7 @@ function renderDiaryEntries(entries) {
 
   
 async function loadAssetDiary(assetId) {
-  var r = await api('/api/portal-data?resource=attachments&assetId=' + encodeURIComponent(assetId));
+  var r = await api('/api/portal-data.php?resource=attachments&assetId=' + encodeURIComponent(assetId));
   var entries = [];
   if (r.ok) {
     entries = Array.isArray(r.data) ? r.data : [];
@@ -1233,7 +1233,7 @@ document.addEventListener('keydown', function(e) {
 async function debugAssetAttachments(assetId) {
   console.log('%c[DEBUG] Fetching attachments for asset: ' + assetId, 'color:cyan;font-weight:bold');
 
-  var r = await api('/api/portal-data?resource=attachments-debug&assetId=' + encodeURIComponent(assetId));
+  var r = await api('/api/portal-data.php?resource=attachments-debug&assetId=' + encodeURIComponent(assetId));
 
   if (!r.ok) {
     console.error('[DEBUG] Failed:', r.data);
