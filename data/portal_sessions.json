@@ -26,12 +26,5 @@
         "role": "admin",
         "customerId": null,
         "expiresAt": "2026-08-08T02:32:43+00:00"
-    },
-    {
-        "token": "c341697b-dfcc-9c62-49f7-471252de6762",
-        "userId": "admin-001",
-        "role": "admin",
-        "customerId": null,
-        "expiresAt": "2026-08-08T02:36:29+00:00"
     }
 ]
