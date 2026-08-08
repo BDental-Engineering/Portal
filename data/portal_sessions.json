@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "token": "e154e416-6e59-7979-e625-72c45ecba60d",
+        "userId": "admin-001",
+        "role": "admin",
+        "customerId": null,
+        "expiresAt": "2026-08-08T14:01:16+00:00"
+    }
+]
