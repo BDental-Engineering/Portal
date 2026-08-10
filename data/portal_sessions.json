@@ -1,1 +1,9 @@
-[]
+[
+    {
+        "token": "91be3293-af23-2f05-249d-c8b717a13fea",
+        "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
+        "role": "customer",
+        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
+        "expiresAt": "2026-08-10T14:20:41+00:00"
+    }
+]
