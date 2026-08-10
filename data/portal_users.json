@@ -1,21 +1,31 @@
 [
-  {
-    "id": "admin-001",
-    "name": "Admin",
-    "email": "sales@bdentalengineering.co.uk",
-    "passwordHash": "2221aa193aea3b3fdee120c146c302fdb6ea606dbf4dfc5e1d587ec4b1aedf74",
-    "role": "admin",
-    "customerId": null,
-    "active": true,
-    "createdAt": "2026-08-04T16:41:36.995Z"
-  },
-  {
-    "id": "user_002",
-    "email": "client@example.com",
-    "passwordHash": "abc123...",
-    "name": "Acme Engineering",
-    "role": "customer",
-    "active": 1,
-    "customerId": "bea9fa6d-2ecb-4e27-8800-214e08d3dc8b"
-  }
+    {
+        "id": "admin-001",
+        "name": "Admin",
+        "email": "sales@bdentalengineering.co.uk",
+        "passwordHash": "2221aa193aea3b3fdee120c146c302fdb6ea606dbf4dfc5e1d587ec4b1aedf74",
+        "role": "admin",
+        "customerId": null,
+        "active": true,
+        "createdAt": "2026-08-04T16:41:36.995Z"
+    },
+    {
+        "id": "user_002",
+        "email": "client@example.com",
+        "passwordHash": "abc123...",
+        "name": "Acme Engineering",
+        "role": "customer",
+        "active": 1,
+        "customerId": "bea9fa6d-2ecb-4e27-8800-214e08d3dc8b"
+    },
+    {
+        "id": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
+        "name": "Test",
+        "email": "Test@Test.com",
+        "passwordHash": "37268335dd6931045bdcdf92623ff819a64244b53d0e746d438797349d4da578",
+        "role": "customer",
+        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
+        "active": true,
+        "createdAt": "2026-08-10T06:20:12+00:00"
+    }
 ]
