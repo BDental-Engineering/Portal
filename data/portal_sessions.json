@@ -89,5 +89,12 @@
         "role": "customer",
         "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
         "expiresAt": "2026-08-15T20:03:04+00:00"
+    },
+    {
+        "token": "6e4c618d-445d-129b-a16e-a10d0f24e7cf",
+        "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
+        "role": "customer",
+        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
+        "expiresAt": "2026-08-15T20:04:28+00:00"
     }
 ]
