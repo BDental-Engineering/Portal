@@ -1,40 +1,5 @@
 [
     {
-        "token": "940dcba8-bbaa-66e6-362c-50186b5f859c",
-        "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
-        "role": "customer",
-        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
-        "expiresAt": "2026-08-15T15:21:50+00:00"
-    },
-    {
-        "token": "5c0ffb0e-73df-41e6-b2f4-37e011c1d683",
-        "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
-        "role": "customer",
-        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
-        "expiresAt": "2026-08-15T15:38:23+00:00"
-    },
-    {
-        "token": "37d7f44c-b1e7-db22-f3ad-8d8f5ce42815",
-        "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
-        "role": "customer",
-        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
-        "expiresAt": "2026-08-15T15:39:32+00:00"
-    },
-    {
-        "token": "5b48983a-7257-03fe-3154-efe82f3bf580",
-        "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
-        "role": "customer",
-        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
-        "expiresAt": "2026-08-15T15:51:22+00:00"
-    },
-    {
-        "token": "5ea3c4ae-e7c0-7b76-9bdd-0d75a7bc7b05",
-        "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
-        "role": "customer",
-        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
-        "expiresAt": "2026-08-15T16:28:03+00:00"
-    },
-    {
         "token": "23373f11-3b4e-b6c6-1c88-58f4ef05b9e5",
         "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
         "role": "customer",
@@ -138,5 +103,12 @@
         "role": "customer",
         "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
         "expiresAt": "2026-08-15T20:57:19+00:00"
+    },
+    {
+        "token": "e1ab0d87-4a95-0032-45c7-61fc1c326d8f",
+        "userId": "admin-001",
+        "role": "admin",
+        "customerId": null,
+        "expiresAt": "2026-08-16T00:43:13+00:00"
     }
 ]
