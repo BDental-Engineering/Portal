@@ -37,5 +37,15 @@
         "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
         "active": true,
         "createdAt": "2026-08-17T20:59:29+00:00"
+    },
+    {
+        "id": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
+        "name": "Rosie Buckingham",
+        "email": "rosie.buckingham@bdentalengineering.co.uk",
+        "passwordHash": "6d6c7c7fc1a8e547572757dbe0b090601347e2dbff390ede99ab4bea7e299511",
+        "role": "admin",
+        "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
+        "active": true,
+        "createdAt": "2026-08-17T20:59:47+00:00"
     }
 ]
