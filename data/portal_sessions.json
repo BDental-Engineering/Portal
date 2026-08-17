@@ -1,16 +1,9 @@
 [
     {
-        "token": "dd0dfb58-76c5-88cb-f6f2-439d3dfdf1af",
+        "token": "888fd658-01b7-377c-efc4-096d0c0e8e62",
         "userId": "admin-001",
         "role": "admin",
         "customerId": null,
-        "expiresAt": "2026-08-17T03:41:59+00:00"
-    },
-    {
-        "token": "272a69ba-3250-87e3-19d9-0506623cba86",
-        "userId": "admin-001",
-        "role": "admin",
-        "customerId": null,
-        "expiresAt": "2026-08-17T03:45:55+00:00"
+        "expiresAt": "2026-08-17T12:51:43+00:00"
     }
 ]
