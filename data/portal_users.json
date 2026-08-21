@@ -22,9 +22,9 @@
         "id": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
         "name": "Test",
         "email": "Test@Test.com",
-        "passwordHash": "37268335dd6931045bdcdf92623ff819a64244b53d0e746d438797349d4da578",
+        "passwordHash": "759e9a180f4cadbe813e841514e3390b031b97e55598336e40c1ab9178c3cc29",
         "role": "customer",
-        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
+        "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
         "active": true,
         "createdAt": "2026-08-10T06:20:12+00:00"
     },
