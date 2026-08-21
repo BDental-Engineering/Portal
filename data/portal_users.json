@@ -49,6 +49,9 @@
         "role": "admin",
         "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
         "active": true,
-        "createdAt": "2026-08-17T20:59:47+00:00"
+        "createdAt": "2026-08-17T20:59:47+00:00",
+        "isWarehouse": true,
+        "hasVanStock": false,
+        "sm8Uuid": ""
     }
 ]
