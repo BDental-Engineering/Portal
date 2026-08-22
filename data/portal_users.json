@@ -56,7 +56,7 @@
     },
     {
         "id": "1d188da8-8591-25f0-ef98-fc746653cf9e",
-        "name": "Warehouse",
+        "name": "Warehouse Stock",
         "email": "Parts@bdentalengineering.co.uk",
         "passwordHash": "6d6c7c7fc1a8e547572757dbe0b090601347e2dbff390ede99ab4bea7e299511",
         "role": "admin",
