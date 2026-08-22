@@ -50,9 +50,9 @@
         "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
         "active": true,
         "createdAt": "2026-08-17T20:59:47+00:00",
-        "isWarehouse": true,
+        "isWarehouse": false,
         "hasVanStock": false,
-        "sm8Uuid": ""
+        "sm8Uuid": "f4e05791-6c93-448e-a25b-21469682cc3a"
     },
     {
         "id": "1d188da8-8591-25f0-ef98-fc746653cf9e",
