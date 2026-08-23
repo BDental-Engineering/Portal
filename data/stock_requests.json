@@ -1,21 +1,5 @@
 [
     {
-        "id": "01a02933-9cf9-7f6f-ab25-060dd80ee7eb",
-        "message_uuid": "01a02933-9cf9-7f6f-ab25-060dd80ee7eb",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "\ud83d\udd14 Richard Buckingham mentioned you in a portal task comment.\n\n\ud83d\udccb Task: Finish quote for Acteon collimator & 300 LR light upgrade - emailed Belmont for light upgrade 23\/07\/26\n\ud83d\udcac \"@Warehouse Stock test\"\n\n\ud83d\udc49 Open task in portal:\nhttps:\/\/www.bdentalengineering.co.uk\/portal\/portal-admin-v2.php?tab=tasks&task=019f5a3e-b267-7f6f",
-        "item_number": "ab24-9b1a7b1bb48d",
-        "quantity": 1,
-        "raw_message": "\ud83d\udd14 Richard Buckingham mentioned you in a portal task comment.\n\n\ud83d\udccb Task: Finish quote for Acteon collimator & 300 LR light upgrade - emailed Belmont for light upgrade 23\/07\/26\n\ud83d\udcac \"@Warehouse Stock test\"\n\n\ud83d\udc49 Open task in portal:\nhttps:\/\/www.bdentalengineering.co.uk\/portal\/portal-admin-v2.php?tab=tasks&task=019f5a3e-b267-7f6f-ab24-9b1a7b1bb48d",
-        "job_uuid": "",
-        "sent_at": "2026-08-22 12:20:43",
-        "status": "pending",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
-    },
-    {
         "id": "5bda3c86-41fc-49ef-b19c-2494cf7991ba",
         "message_uuid": "5bda3c86-41fc-49ef-b19c-2494cf7991ba",
         "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
