@@ -18,25 +18,5 @@
         "fulfilled_at": "2026-08-23T13:26:22+00:00",
         "fulfilled_by": "Admin",
         "notes": "fulfill test"
-    },
-    {
-        "id": "c55437e8-1779-4021-acf0-24953decd9ca",
-        "message_uuid": "c55437e8-1779-4021-acf0-24953decd9ca",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "AC200 Compressor 2 Cyl 230v + Dryer",
-        "item_number": "CAT-H13230",
-        "quantity": 1,
-        "sm8_material_uuid": "ebb99293-33eb-45af-98a6-23b1bd019c1b",
-        "in_stock_now": 0,
-        "matched_in_sm8": true,
-        "match_method": "name_partial",
-        "raw_message": "Ac200 x1",
-        "job_uuid": "",
-        "sent_at": "2026-08-23 14:03:50",
-        "status": "fulfilled",
-        "fulfilled_at": "2026-08-23T13:04:54+00:00",
-        "fulfilled_by": "Admin",
-        "notes": "come get it"
     }
 ]
