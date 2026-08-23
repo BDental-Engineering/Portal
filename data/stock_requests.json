@@ -34,9 +34,9 @@
         "raw_message": "H13230",
         "job_uuid": "",
         "sent_at": "2026-08-23 17:08:13",
-        "status": "ordered",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": "ordered compressor"
+        "status": "fulfilled",
+        "fulfilled_at": "2026-08-23T16:09:53+00:00",
+        "fulfilled_by": "Admin",
+        "notes": "this is now in"
     }
 ]
