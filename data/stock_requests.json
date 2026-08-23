@@ -1,21 +1,5 @@
 [
     {
-        "id": "fc6172bf-88f2-400a-a44c-2494c476843a",
-        "message_uuid": "fc6172bf-88f2-400a-a44c-2494c476843a",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "427037 qty 2",
-        "item_number": "",
-        "quantity": 1,
-        "raw_message": "427037 qty 2",
-        "job_uuid": "",
-        "sent_at": "2026-08-22 11:18:35",
-        "status": "pending",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
-    },
-    {
         "id": "57e9d42b-69ab-4eda-aaeb-2494c88c0b6a",
         "message_uuid": "57e9d42b-69ab-4eda-aaeb-2494c88c0b6a",
         "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
