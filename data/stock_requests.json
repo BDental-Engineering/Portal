@@ -66,5 +66,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "3e704233-f521-48a9-8ac8-24953fc2d1fa",
+        "message_uuid": "3e704233-f521-48a9-8ac8-24953fc2d1fa",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "cat-h13230",
+        "item_number": "H13230",
+        "quantity": 1,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "Can I get cat-h13230 please",
+        "job_uuid": "",
+        "sent_at": "2026-08-23 11:37:49",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
