@@ -1,21 +1,5 @@
 [
     {
-        "id": "6ced0f91-dab9-432f-8399-2494c398c76a",
-        "message_uuid": "6ced0f91-dab9-432f-8399-2494c398c76a",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "Retest",
-        "item_number": "",
-        "quantity": 1,
-        "raw_message": "Retest",
-        "job_uuid": "",
-        "sent_at": "2026-08-22 20:30:37",
-        "status": "pending",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
-    },
-    {
         "id": "946e1a05-ef65-410d-8123-2494c010bd7a",
         "message_uuid": "946e1a05-ef65-410d-8123-2494c010bd7a",
         "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
