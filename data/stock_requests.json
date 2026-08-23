@@ -54,9 +54,9 @@
         "raw_message": "Servair2",
         "job_uuid": "",
         "sent_at": "2026-08-23 14:13:30",
-        "status": "ordered",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": "on order"
+        "status": "fulfilled",
+        "fulfilled_at": "2026-08-23T13:17:26+00:00",
+        "fulfilled_by": "Admin",
+        "notes": "done"
     }
 ]
