@@ -34,9 +34,9 @@
         "raw_message": "Ac200 x1",
         "job_uuid": "",
         "sent_at": "2026-08-23 14:03:50",
-        "status": "ordered",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": "1111111"
+        "status": "fulfilled",
+        "fulfilled_at": "2026-08-23T13:04:54+00:00",
+        "fulfilled_by": "Admin",
+        "notes": "come get it"
     }
 ]
