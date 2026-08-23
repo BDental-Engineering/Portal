@@ -14,10 +14,10 @@
         "raw_message": "BPvt1 x2 please",
         "job_uuid": "",
         "sent_at": "2026-08-23 13:43:31",
-        "status": "ordered",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": "testing"
+        "status": "fulfilled",
+        "fulfilled_at": "2026-08-23T13:26:22+00:00",
+        "fulfilled_by": "Admin",
+        "notes": "fulfill test"
     },
     {
         "id": "c55437e8-1779-4021-acf0-24953decd9ca",
