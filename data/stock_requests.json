@@ -14,9 +14,9 @@
         "raw_message": "427037 x 1",
         "job_uuid": "",
         "sent_at": "2026-08-23 17:00:20",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "ordered"
     }
 ]
