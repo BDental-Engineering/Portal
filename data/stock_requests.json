@@ -34,9 +34,9 @@
         "raw_message": "H13230",
         "job_uuid": "",
         "sent_at": "2026-08-23 17:08:13",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "ordered compressor"
     }
 ]
