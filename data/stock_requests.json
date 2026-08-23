@@ -86,5 +86,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "bc1c217b-7d64-4fc1-82cb-249533c4a67a",
+        "message_uuid": "bc1c217b-7d64-4fc1-82cb-249533c4a67a",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "Bambi BPVT1 Service Kit for VT75, VT150, VT250 (2 Kits) & VT300 (2 Kits)",
+        "item_number": "BAM-BPTV1",
+        "quantity": 1,
+        "sm8_material_uuid": "e8893624-62b0-4ee7-9839-2276638b5dfb",
+        "in_stock_now": 0,
+        "matched_in_sm8": true,
+        "match_method": "name_partial",
+        "raw_message": "Bpvt1",
+        "job_uuid": "",
+        "sent_at": "2026-08-23 11:43:16",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
