@@ -54,9 +54,9 @@
         "raw_message": "Servair2",
         "job_uuid": "",
         "sent_at": "2026-08-23 14:13:30",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "on order"
     }
 ]
