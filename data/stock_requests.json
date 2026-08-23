@@ -18,5 +18,25 @@
         "fulfilled_at": "2026-08-23T16:02:41+00:00",
         "fulfilled_by": "Admin",
         "notes": "fulfilled"
+    },
+    {
+        "id": "1672c26a-a67f-4d73-b309-24953079cdaa",
+        "message_uuid": "1672c26a-a67f-4d73-b309-24953079cdaa",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "H13230",
+        "item_number": "H13230",
+        "quantity": 1,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "H13230",
+        "job_uuid": "",
+        "sent_at": "2026-08-23 17:08:13",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
