@@ -1,21 +1,5 @@
 [
     {
-        "id": "edbd0930-7391-4f5e-bdcf-2494ca3b483a",
-        "message_uuid": "edbd0930-7391-4f5e-bdcf-2494ca3b483a",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "Test back again",
-        "item_number": "",
-        "quantity": 1,
-        "raw_message": "Test back again",
-        "job_uuid": "",
-        "sent_at": "2026-08-22 17:06:53",
-        "status": "pending",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
-    },
-    {
         "id": "fc6172bf-88f2-400a-a44c-2494c476843a",
         "message_uuid": "fc6172bf-88f2-400a-a44c-2494c476843a",
         "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
