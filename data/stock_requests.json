@@ -166,5 +166,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "5a95fcf5-f1bc-430b-9533-24953c75382a",
+        "message_uuid": "5a95fcf5-f1bc-430b-9533-24953c75382a",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "Bpvt1 QTY:2",
+        "item_number": "",
+        "quantity": 2,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "Bpvt1 x2",
+        "job_uuid": "",
+        "sent_at": "2026-08-23 12:19:35",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
