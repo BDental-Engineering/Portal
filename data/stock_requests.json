@@ -14,9 +14,9 @@
         "raw_message": "427037 x 1",
         "job_uuid": "",
         "sent_at": "2026-08-23 17:00:20",
-        "status": "ordered",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": "ordered"
+        "status": "fulfilled",
+        "fulfilled_at": "2026-08-23T16:02:41+00:00",
+        "fulfilled_by": "Admin",
+        "notes": "fulfilled"
     }
 ]
