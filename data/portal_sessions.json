@@ -5,5 +5,12 @@
         "role": "admin",
         "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
         "expiresAt": "2026-08-25T00:41:57+00:00"
+    },
+    {
+        "token": "0c42736a-6571-b0ce-87c3-2d3b6c03c95f",
+        "userId": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
+        "role": "admin",
+        "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
+        "expiresAt": "2026-08-25T01:32:33+00:00"
     }
 ]
