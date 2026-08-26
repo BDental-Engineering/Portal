@@ -118,5 +118,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "35e8324a-f180-4488-97dc-24989f91502a",
+        "message_uuid": "35e8324a-f180-4488-97dc-24989f91502a",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "DCI-3600",
+        "item_number": "DCI-3600",
+        "quantity": 3,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "Dci-3600 x 3",
+        "job_uuid": "",
+        "sent_at": "2026-08-26 13:06:39",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
