@@ -24,7 +24,7 @@
         "email": "Test@Test.com",
         "passwordHash": "0218b3506b9b9de4fd357c0865a393471b73fc5ea972c5731219cfae32cee483",
         "role": "customer",
-        "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
+        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
         "active": true,
         "createdAt": "2026-08-10T06:20:12+00:00"
     },
