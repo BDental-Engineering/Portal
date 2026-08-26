@@ -22,7 +22,7 @@
         "id": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
         "name": "Test",
         "email": "Test@Test.com",
-        "passwordHash": "759e9a180f4cadbe813e841514e3390b031b97e55598336e40c1ab9178c3cc29",
+        "passwordHash": "0218b3506b9b9de4fd357c0865a393471b73fc5ea972c5731219cfae32cee483",
         "role": "customer",
         "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
         "active": true,
