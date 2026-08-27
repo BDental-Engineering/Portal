@@ -74,10 +74,10 @@
         "raw_message": "Bel-fatb27b0 x 5",
         "job_uuid": "",
         "sent_at": "2026-08-23 21:38:54",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "1195"
     },
     {
         "id": "50ff72b3-2cb7-4c2f-b8d7-24961126391a",
