@@ -40,26 +40,6 @@
         "notes": "this is now in"
     },
     {
-        "id": "bfa1b11a-3d84-4d68-8580-24953d6015da",
-        "message_uuid": "bfa1b11a-3d84-4d68-8580-24953d6015da",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "Actuator for Dental Unit",
-        "item_number": "BEL-FAPA54A0",
-        "quantity": 5,
-        "sm8_material_uuid": "019faf07-6431-7f6f-ab25-c95308955d7b",
-        "in_stock_now": 0,
-        "matched_in_sm8": true,
-        "match_method": "manual_override",
-        "raw_message": "Bel-fapa54a0 x 5",
-        "job_uuid": "",
-        "sent_at": "2026-08-23 21:38:31",
-        "status": "ordered",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
-    },
-    {
         "id": "d7ac51b5-41a8-411b-8693-24953648d22a",
         "message_uuid": "d7ac51b5-41a8-411b-8693-24953648d22a",
         "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
