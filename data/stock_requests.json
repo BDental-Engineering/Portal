@@ -94,10 +94,10 @@
         "raw_message": "Fi-srdiresin",
         "job_uuid": "",
         "sent_at": "2026-08-24 19:37:25",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "Ionic"
     },
     {
         "id": "35e8324a-f180-4488-97dc-24989f91502a",
