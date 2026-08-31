@@ -118,5 +118,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "78b8743c-0b8e-487e-8769-249d205bb68a",
+        "message_uuid": "78b8743c-0b8e-487e-8769-249d205bb68a",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "Bel-apda11a0 QTY:4",
+        "item_number": "",
+        "quantity": 4,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "Bel-apda11a0 x 4",
+        "job_uuid": "",
+        "sent_at": "2026-08-31 17:40:39",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
