@@ -134,7 +134,7 @@
         "raw_message": "Bel-apda11a0 x 4",
         "job_uuid": "",
         "sent_at": "2026-08-31 17:40:39",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
