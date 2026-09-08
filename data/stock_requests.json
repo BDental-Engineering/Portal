@@ -138,5 +138,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": "1199 - checking stock first"
+    },
+    {
+        "id": "092905f4-7d49-4004-a7de-24a51faea20a",
+        "message_uuid": "092905f4-7d49-4004-a7de-24a51faea20a",
+        "from_staff_uuid": "f4e05791-6c93-448e-a25b-21469682cc3a",
+        "from_name": "Rosie Buckingham",
+        "part_name": "Eschmann prv QTY:2",
+        "item_number": "",
+        "quantity": 2,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "Eschmann prv x 2",
+        "job_uuid": "",
+        "sent_at": "2026-09-08 13:34:24",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
