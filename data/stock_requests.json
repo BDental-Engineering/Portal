@@ -218,5 +218,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "8e14cc91-9c91-4fbf-88b2-24ac233805fa",
+        "message_uuid": "8e14cc91-9c91-4fbf-88b2-24ac233805fa",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "DCI-9377",
+        "item_number": "DCI-9377",
+        "quantity": 1,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "DCI-9377 x 3. One will go to bury house",
+        "job_uuid": "",
+        "sent_at": "2026-09-15 06:52:21",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
