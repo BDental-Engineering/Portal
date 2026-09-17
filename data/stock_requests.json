@@ -114,10 +114,10 @@
         "raw_message": "Dci-3600 x 3",
         "job_uuid": "",
         "sent_at": "2026-08-26 13:06:39",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "DW"
     },
     {
         "id": "78b8743c-0b8e-487e-8769-249d205bb68a",
