@@ -154,10 +154,10 @@
         "raw_message": "Eschmann prv x 2",
         "job_uuid": "",
         "sent_at": "2026-09-08 13:34:24",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "1207"
     },
     {
         "id": "20c654f6-3f88-4558-be74-24a74a42fc5a",
