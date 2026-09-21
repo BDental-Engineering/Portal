@@ -194,10 +194,10 @@
         "raw_message": "Bel-falc56a0 x 4",
         "job_uuid": "",
         "sent_at": "2026-09-10 13:16:26",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "1208"
     },
     {
         "id": "91dcc3fd-bd34-44ab-95e7-24a74d662eea",
