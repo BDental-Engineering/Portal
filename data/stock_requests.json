@@ -480,26 +480,6 @@
         "notes": ""
     },
     {
-        "id": "68e16b93-3fba-4014-978a-24953b3d26ba",
-        "message_uuid": "68e16b93-3fba-4014-978a-24953b3d26ba",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "Bambi VT75D with Drying Column",
-        "item_number": "VT75D",
-        "quantity": 1,
-        "sm8_material_uuid": "ee659a77-666c-4fc5-a6a8-214e05b7c93b",
-        "in_stock_now": 0,
-        "matched_in_sm8": true,
-        "match_method": "name_partial",
-        "raw_message": "Service kit for vt75",
-        "job_uuid": "",
-        "sent_at": "2026-08-23 12:20:02",
-        "status": "pending",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
-    },
-    {
         "id": "81e41ba0-f337-4efa-b983-24a51d37deaa",
         "message_uuid": "81e41ba0-f337-4efa-b983-24a51d37deaa",
         "from_staff_uuid": "f4e05791-6c93-448e-a25b-21469682cc3a",
