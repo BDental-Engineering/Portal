@@ -778,25 +778,5 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
-    },
-    {
-        "id": "bfa1b11a-3d84-4d68-8580-24953d6015da",
-        "message_uuid": "bfa1b11a-3d84-4d68-8580-24953d6015da",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "Bel-fapa54a0 QTY:5",
-        "item_number": "",
-        "quantity": 5,
-        "sm8_material_uuid": "",
-        "in_stock_now": 0,
-        "matched_in_sm8": false,
-        "match_method": "none",
-        "raw_message": "Bel-fapa54a0 x 5",
-        "job_uuid": "",
-        "sent_at": "2026-08-23 21:38:31",
-        "status": "pending",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
     }
 ]
