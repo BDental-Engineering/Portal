@@ -1,25 +1,5 @@
 [
     {
-        "id": "20c654f6-3f88-4558-be74-24a74a42fc5a",
-        "message_uuid": "20c654f6-3f88-4558-be74-24a74a42fc5a",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "Rs pro 2351139 QTY:2",
-        "item_number": "",
-        "quantity": 2,
-        "sm8_material_uuid": "",
-        "in_stock_now": 0,
-        "matched_in_sm8": false,
-        "match_method": "none",
-        "raw_message": "Rs pro 2351139 x 2",
-        "job_uuid": "",
-        "sent_at": "2026-09-10 09:32:42",
-        "status": "pending",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
-    },
-    {
         "id": "26e944ce-07ae-463e-b942-24a74f98b90a",
         "message_uuid": "26e944ce-07ae-463e-b942-24a74f98b90a",
         "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
@@ -58,26 +38,6 @@
         "fulfilled_at": "2026-09-21T20:11:57+00:00",
         "fulfilled_by": "Admin",
         "notes": "2 spare are in Belmont box in office shelving"
-    },
-    {
-        "id": "20c654f6-3f88-4558-be74-24a74a42fc5a",
-        "message_uuid": "20c654f6-3f88-4558-be74-24a74a42fc5a",
-        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
-        "from_name": "Richard Buckingham",
-        "part_name": "Rs pro 2351139 QTY:2",
-        "item_number": "",
-        "quantity": 2,
-        "sm8_material_uuid": "",
-        "in_stock_now": 0,
-        "matched_in_sm8": false,
-        "match_method": "none",
-        "raw_message": "Rs pro 2351139 x 2",
-        "job_uuid": "",
-        "sent_at": "2026-09-10 09:32:42",
-        "status": "pending",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": ""
     },
     {
         "id": "26e944ce-07ae-463e-b942-24a74f98b90a",
