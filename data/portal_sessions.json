@@ -1,30 +1,9 @@
 [
     {
-        "token": "f0eb2358-2e75-d381-ed78-0d429c9004ec",
+        "token": "81c1fd80-5a46-ea39-1990-256ab0f23b1d",
         "userId": "1faf1b73-75ac-e143-ef26-b2ff8d435bf6",
         "role": "admin",
         "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
-        "expiresAt": "2026-10-01T01:33:38+00:00"
-    },
-    {
-        "token": "aac8d711-d229-bac9-33ec-5d481c7894a6",
-        "userId": "1faf1b73-75ac-e143-ef26-b2ff8d435bf6",
-        "role": "admin",
-        "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
-        "expiresAt": "2026-10-01T04:21:44+00:00"
-    },
-    {
-        "token": "ba90db46-28c7-09f1-680f-17d7e90e510d",
-        "userId": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
-        "role": "admin",
-        "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
-        "expiresAt": "2026-10-01T04:55:59+00:00"
-    },
-    {
-        "token": "c27db135-4e86-7255-db09-56ba658caa6b",
-        "userId": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
-        "role": "admin",
-        "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
-        "expiresAt": "2026-10-01T05:02:16+00:00"
+        "expiresAt": "2026-10-01T18:59:15+00:00"
     }
 ]
