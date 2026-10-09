@@ -1,16 +1,9 @@
 [
     {
-        "token": "7c3d38f8-143d-ba02-c91f-405f54402169",
-        "userId": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
+        "token": "489e6f2f-26fd-0344-5a0c-88a9d7770b52",
+        "userId": "1faf1b73-75ac-e143-ef26-b2ff8d435bf6",
         "role": "admin",
         "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
-        "expiresAt": "2026-10-08T18:47:46+00:00"
-    },
-    {
-        "token": "437b19ab-79fd-c291-bf66-fe5997a3c99b",
-        "userId": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
-        "role": "admin",
-        "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
-        "expiresAt": "2026-10-09T01:47:48+00:00"
+        "expiresAt": "2026-10-09T15:29:56+00:00"
     }
 ]
