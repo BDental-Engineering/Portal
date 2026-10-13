@@ -78,5 +78,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "074afc30-9842-452b-8c06-24c8193149da",
+        "message_uuid": "074afc30-9842-452b-8c06-24c8193149da",
+        "from_staff_uuid": "f4e05791-6c93-448e-a25b-21469682cc3a",
+        "from_name": "Rosie Buckingham",
+        "part_name": "Amalgam-Single-Use Container CAS1",
+        "item_number": "DUR-711703300",
+        "quantity": 1,
+        "sm8_material_uuid": "aa7a150e-cdf6-4320-a57a-22443a52e08b",
+        "in_stock_now": 0,
+        "matched_in_sm8": true,
+        "match_method": "item_number_exact",
+        "raw_message": "DUR-711703300 amalgam container",
+        "job_uuid": "",
+        "sent_at": "2026-10-13 08:54:20",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
