@@ -98,5 +98,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "01a15df8-487c-7f6f-ab24-06fc1e225eea",
+        "message_uuid": "01a15df8-487c-7f6f-ab24-06fc1e225eea",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "Apv.lg.17r QTY:1",
+        "item_number": "",
+        "quantity": 1,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "Apv.lg.17r x 1",
+        "job_uuid": "",
+        "sent_at": "2026-10-21 11:18:35",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
