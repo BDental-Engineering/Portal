@@ -118,5 +118,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "01a164d6-f9a2-7f6f-ab24-e590a0a0506a",
+        "message_uuid": "01a164d6-f9a2-7f6f-ab24-e590a0a0506a",
+        "from_staff_uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "from_name": "Richard Buckingham",
+        "part_name": "Spittoon Bowl Solenoid Valve (Mark 2 series)",
+        "item_number": "DUR-711011060E",
+        "quantity": 1,
+        "sm8_material_uuid": "c9822a6e-8778-47d2-b7f5-2244311fd6bb",
+        "in_stock_now": 0,
+        "matched_in_sm8": true,
+        "match_method": "item_number_exact",
+        "raw_message": "Dur-711011060e qty 1",
+        "job_uuid": "",
+        "sent_at": "2026-10-22 19:19:32",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
