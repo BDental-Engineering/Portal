@@ -15,14 +15,6 @@
         "expiresAt": "2026-10-25T22:10:03+00:00"
     },
     {
-        "token": "6d27d79a-a661-2268-a9d7-ae7d19a6fdac",
-        "userId": "1faf1b73-75ac-e143-ef26-b2ff8d435bf6",
-        "role": "admin",
-        "customerId": null,
-        "customerIds": [],
-        "expiresAt": "2026-10-25T23:10:53+00:00"
-    },
-    {
         "token": "32ab3833-650f-68b4-7d54-2132b1525f26",
         "userId": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
         "role": "admin",
