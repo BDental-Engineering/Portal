@@ -24,12 +24,11 @@
         "email": "Test@Test.com",
         "passwordHash": "$argon2id$v=19$m=65536,t=3,p=1$cnlMSkRUdmRma0RJMlpHYQ$lDWLLKZX5pTPl2nfl4jqEL1u8UZ6ngRP+uiDGGkR+Uo",
         "role": "customer",
-        "customerId": "82f5186f-93cb-42df-853a-22032ea68fcb",
+        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
         "active": true,
         "createdAt": "2026-08-10T06:20:12+00:00",
         "customerIds": [
-            "82f5186f-93cb-42df-853a-22032ea68fcb",
-            "ea5a19f9-097a-461a-88c4-22421842fcbb"
+            "80f6a839-b8db-4013-8e0c-214e0f0a8e4b"
         ],
         "passwordUpdatedAt": "2026-10-25T14:34:31+00:00"
     },
