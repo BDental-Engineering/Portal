@@ -13,5 +13,16 @@
         "customerId": null,
         "customerIds": [],
         "expiresAt": "2026-10-25T22:10:03+00:00"
+    },
+    {
+        "token": "01fbbc1b-d8c8-db01-2a21-46321576d932",
+        "userId": "648afa0f-337b-52ac-ba6e-7ea0c131b79e",
+        "role": "customer",
+        "customerId": "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
+        "customerIds": [
+            "80f6a839-b8db-4013-8e0c-214e0f0a8e4b",
+            "82f5186f-93cb-42df-853a-22032ea68fcb"
+        ],
+        "expiresAt": "2026-10-25T23:07:19+00:00"
     }
 ]
