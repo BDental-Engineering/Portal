@@ -21,5 +21,13 @@
         "customerId": null,
         "customerIds": [],
         "expiresAt": "2026-10-25T23:10:53+00:00"
+    },
+    {
+        "token": "32ab3833-650f-68b4-7d54-2132b1525f26",
+        "userId": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
+        "role": "admin",
+        "customerId": null,
+        "customerIds": [],
+        "expiresAt": "2026-10-25T23:28:01+00:00"
     }
 ]
