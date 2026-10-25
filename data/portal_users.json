@@ -32,14 +32,15 @@
         "id": "1faf1b73-75ac-e143-ef26-b2ff8d435bf6",
         "name": "Richard Buckingham",
         "email": "richard.buckingham@bdentalengineering.co.uk",
-        "passwordHash": "6d6c7c7fc1a8e547572757dbe0b090601347e2dbff390ede99ab4bea7e299511",
+        "passwordHash": "$argon2id$v=19$m=65536,t=3,p=1$clM2SEFLVVI1TFYwV2pwZA$C3x1aWPJJ9t0RPagyU\/4aLRlCpCrTetnmxTeGbohdtE",
         "role": "admin",
         "customerId": "96a5592c-5339-478f-b5ac-221b85bed19a",
         "active": true,
         "createdAt": "2026-08-17T20:59:29+00:00",
         "isWarehouse": false,
         "hasVanStock": true,
-        "sm8Uuid": "bc4e3166-107e-48f9-b006-2145c43396bb"
+        "sm8Uuid": "bc4e3166-107e-48f9-b006-2145c43396bb",
+        "passwordUpdatedAt": "2026-10-25T14:10:02+00:00"
     },
     {
         "id": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
