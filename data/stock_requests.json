@@ -134,10 +134,10 @@
         "raw_message": "Dur-711011060e qty 1",
         "job_uuid": "",
         "sent_at": "2026-10-22 19:19:32",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "1222"
     },
     {
         "id": "01a16e5e-cf92-7f6f-ab24-78c4425d245a",
