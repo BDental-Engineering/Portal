@@ -94,10 +94,10 @@
         "raw_message": "DUR-711703300 amalgam container",
         "job_uuid": "",
         "sent_at": "2026-10-13 08:54:20",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "1222"
     },
     {
         "id": "01a15df8-487c-7f6f-ab24-06fc1e225eea",
