@@ -130,7 +130,7 @@
         "sm8_material_uuid": "c9822a6e-8778-47d2-b7f5-2244311fd6bb",
         "in_stock_now": 0,
         "matched_in_sm8": true,
-        "match_method": "item_number_exact",
+        "match_method": "manual_override",
         "raw_message": "Dur-711011060e qty 1",
         "job_uuid": "",
         "sent_at": "2026-10-22 19:19:32",
