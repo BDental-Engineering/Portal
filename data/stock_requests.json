@@ -94,10 +94,10 @@
         "raw_message": "DUR-711703300 amalgam container",
         "job_uuid": "",
         "sent_at": "2026-10-13 08:54:20",
-        "status": "ordered",
-        "fulfilled_at": "",
-        "fulfilled_by": "",
-        "notes": "1222"
+        "status": "fulfilled",
+        "fulfilled_at": "2026-10-29T12:08:32+00:00",
+        "fulfilled_by": "Admin",
+        "notes": "1 x for Shire, 1 put into stock"
     },
     {
         "id": "01a15df8-487c-7f6f-ab24-06fc1e225eea",
