@@ -158,5 +158,25 @@
         "fulfilled_at": "",
         "fulfilled_by": "",
         "notes": ""
+    },
+    {
+        "id": "01a1c55e-6dc2-7f6f-ab24-96b34f8468fa",
+        "message_uuid": "01a1c55e-6dc2-7f6f-ab24-96b34f8468fa",
+        "from_staff_uuid": "f4e05791-6c93-448e-a25b-21469682cc3a",
+        "from_name": "Rosie Buckingham",
+        "part_name": "Mel-me11630 QTY:4",
+        "item_number": "",
+        "quantity": 4,
+        "sm8_material_uuid": "",
+        "in_stock_now": 0,
+        "matched_in_sm8": false,
+        "match_method": "none",
+        "raw_message": "Mel-me11630 x 4",
+        "job_uuid": "",
+        "sent_at": "2026-11-10 12:11:02",
+        "status": "pending",
+        "fulfilled_at": "",
+        "fulfilled_by": "",
+        "notes": ""
     }
 ]
