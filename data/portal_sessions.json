@@ -1,10 +1,10 @@
 [
     {
-        "token": "c9f217f3-4b94-dcd8-79e9-e56acdcf8349",
-        "userId": "1faf1b73-75ac-e143-ef26-b2ff8d435bf6",
+        "token": "76869b77-e7bd-2469-f995-ed6340b589fb",
+        "userId": "a9f47f3a-6bc0-b657-77b0-ce1fc677d649",
         "role": "admin",
         "customerId": null,
         "customerIds": [],
-        "expiresAt": "2026-11-13T05:18:17+00:00"
+        "expiresAt": "2026-11-13T23:56:53+00:00"
     }
 ]
