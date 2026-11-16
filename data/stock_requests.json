@@ -214,10 +214,10 @@
         "raw_message": "Dur-7600A01050 x 2",
         "job_uuid": "",
         "sent_at": "2026-11-12 11:25:27",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "1227"
     },
     {
         "id": "01a1d5ae-4caa-7f6f-ab25-c0eca31a2c2a",
