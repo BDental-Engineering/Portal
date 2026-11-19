@@ -254,9 +254,9 @@
         "raw_message": "Bde-638 x4",
         "job_uuid": "",
         "sent_at": "2026-11-14 16:01:30",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "DW 19\/11\/2026"
     }
 ]
