@@ -194,10 +194,10 @@
         "raw_message": "Bde-445 x 4",
         "job_uuid": "",
         "sent_at": "2026-11-12 11:24:43",
-        "status": "pending",
+        "status": "ordered",
         "fulfilled_at": "",
         "fulfilled_by": "",
-        "notes": ""
+        "notes": "DW 19\/11\/26"
     },
     {
         "id": "01a1cf81-6a6f-7f6f-ab24-09ba539149ca",
